@@ -1,3 +1,6 @@
+运行环境需要node.js 16.3.0
+
+
 # ![Toast UI ImageEditor](https://user-images.githubusercontent.com/35218826/40895380-0b9f4cd6-67ea-11e8-982f-18121daa3a04.png)
 
 > Full featured image editor using HTML5 Canvas. It's easy to use and provides powerful filters.

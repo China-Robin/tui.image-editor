@@ -77,7 +77,8 @@ export const componentNames = keyMirror(
   'FILTER',
   'SHAPE',
   'ZOOM',
-  'RESIZE'
+  'RESIZE',
+  'WATERMARK'
 );
 
 /**
@@ -130,6 +131,8 @@ export const commandNames = {
   SET_OBJECT_POSITION: 'setObjectPosition',
   CHANGE_SELECTION: 'changeSelection',
   RESIZE_IMAGE: 'resize',
+  ADD_IMAGE: 'addImage',
+  ADD_WATERMARK: 'addWatermark',
 };
 
 /**
@@ -201,6 +204,8 @@ export const historyNames = {
   CHANGE_TEXT_STYLE: 'Text',
   REMOVE_OBJECT: 'Delete',
   CLEAR_OBJECTS: 'Delete',
+  ADD_IMAGE: 'Image',
+  ADD_WATERMARK: 'Watermark',
 };
 
 /**
@@ -343,6 +348,13 @@ export const defaultTextRangeValues = {
   min: 10,
   max: 100,
   value: 50,
+};
+
+export const defaultOpacityRangeValues = {
+  realTimeEvent: true,
+  min: 0,
+  max: 100,
+  value: 0,
 };
 
 export const defaultFilterRangeValues = {

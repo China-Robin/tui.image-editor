@@ -49,6 +49,12 @@ export default ({ locale, makeSvgIcon }) => `
                 </div>
                 <label> ${locale.localize('16:9')} </label>
             </div>
+            <div class="tui-image-editor-button preset preset-9-16">
+                <div>
+                    ${makeSvgIcon(['normal', 'active'], 'crop', true)}
+                </div>
+                <label> ${locale.localize('9:16')} </label>
+            </div>
         </li>
         <li class="tui-image-editor-partition tui-image-editor-newline">
         </li>

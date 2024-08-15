@@ -48,8 +48,19 @@
             name: 'SampleImage',
           },
           theme: blackTheme, // or whiteTheme
-          initMenu: 'filter',
-          menuBarPosition: 'bottom',
+          initMenu: 'watermark',
+          menuBarPosition: 'left',
+          // 菜单参数
+          menuParams: {
+            // 定义默认水印
+            watermark: {
+              defaultWatermark: [
+                'https://appnews.hkrbapp.net/favicon.ico',
+                'https://appnews.hkrbapp.net/favicon.ico',
+                'https://appnews.hkrbapp.net/favicon.ico',
+              ]
+            }
+          },
         },
         cssMaxWidth: 700,
         cssMaxHeight: 500,

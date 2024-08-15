@@ -452,10 +452,11 @@ export function getHistoryTitle(command) {
     ADD_IMAGE_OBJECT,
     REMOVE_OBJECT,
     RESIZE_IMAGE,
+    ADD_IMAGE,
+    ADD_WATERMARK,
   } = commandNames;
   const { name, args } = command;
   let historyInfo;
-
   switch (name) {
     case FLIP_IMAGE:
       historyInfo = { name, detail: args[1] === 'reset' ? args[1] : args[1].slice(4) };
@@ -492,6 +493,12 @@ export function getHistoryTitle(command) {
       break;
     case RESIZE_IMAGE:
       historyInfo = { name: historyNames.RESIZE, detail: `${~~args[1].width}x${~~args[1].height}` };
+      break;
+    case ADD_IMAGE:
+      historyInfo = { name: historyNames.ADD_IMAGE, detail: 'Add' };
+      break;
+    case ADD_WATERMARK:
+      historyInfo = { name: historyNames.ADD_WATERMARK, detail: 'Add' };
       break;
 
     default:

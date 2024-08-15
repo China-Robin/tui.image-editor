@@ -18,7 +18,7 @@ class Submenu {
    */
   constructor(
     subMenuElement,
-    { locale, name, makeSvgIcon, menuBarPosition, templateHtml, usageStatistics }
+    { locale, name, makeSvgIcon, menuBarPosition, templateHtml, usageStatistics, menuParams }
   ) {
     this.subMenuElement = subMenuElement;
     this.menuBarPosition = menuBarPosition;
@@ -31,6 +31,7 @@ class Submenu {
       name,
       makeSvgIcon,
       templateHtml,
+      menuParams,
     });
   }
 
@@ -41,6 +42,15 @@ class Submenu {
    */
   selector(selectName) {
     return this.subMenuElement.querySelector(selectName);
+  }
+
+  /**
+   * editor dom ui query selector all
+   * @param {string} selectName - query selector string name
+   * @returns {HTMLElement}
+   */
+  selectorAll(selectName) {
+    return this.subMenuElement.querySelectorAll(selectName);
   }
 
   /**
@@ -96,13 +106,14 @@ class Submenu {
    * @param {*} templateHtml - template for SubMenuElement
    * @private
    */
-  _makeSubMenuElement({ locale, name, iconStyle, makeSvgIcon, templateHtml }) {
+  _makeSubMenuElement({ locale, name, iconStyle, makeSvgIcon, templateHtml, menuParams }) {
     const iconSubMenu = document.createElement('div');
     iconSubMenu.className = `tui-image-editor-menu-${name}`;
     iconSubMenu.innerHTML = templateHtml({
       locale,
       iconStyle,
       makeSvgIcon,
+      menuParams,
     });
 
     this.subMenuElement.appendChild(iconSubMenu);

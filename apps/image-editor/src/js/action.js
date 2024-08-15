@@ -23,6 +23,8 @@ export default {
       icon: this._iconAction(),
       filter: this._filterAction(),
       history: this._historyAction(),
+      image: this._imageAction(),
+      watermark: this._watermarkAction(),
     };
   },
 
@@ -288,6 +290,53 @@ export default {
   },
 
   /**
+   * image Action
+   * @returns {Object} actions for ui image
+   * @private
+   */
+  _imageAction() {
+    return extend(
+      {
+        loadImageFromURL: (imgUrl, file, originX = 'center', originY = 'center') => {
+          // 将图片添加到画布
+          this.addImage(imgUrl, originX, originY).then(() => {
+            URL.revokeObjectURL(file);
+          });
+          this._invoker.fire(eventNames.EXECUTE_COMMAND, historyNames.ADD_IMAGE);
+        },
+      },
+      this._commonAction()
+    );
+  },
+
+  /**
+   * watermark Action
+   * @returns {Object} actions for ui image
+   * @private
+   */
+  _watermarkAction() {
+    return extend(
+      {
+        loadImageFromURL: (imgUrl, file, originX = 'center', originY = 'center') => {
+          // 将水印图片添加到画布
+          this.addWatermarkImage(imgUrl, originX, originY).then(() => {
+            if (file) {
+              URL.revokeObjectURL(file);
+            }
+          });
+          this._invoker.fire(eventNames.EXECUTE_COMMAND, historyNames.ADD_WATERMARK);
+        },
+        changeWatermarkStyle: (styleObj, isSilent) => {
+          if (this.activeObjectId) {
+            this.setObjectPropertiesQuietly(this.activeObjectId, styleObj, isSilent);
+          }
+        },
+      },
+      this._commonAction()
+    );
+  },
+
+  /**
    * Text Action
    * @returns {Object} actions for ui text
    * @private
@@ -394,6 +443,9 @@ export default {
               break;
             case 'preset-16-9':
               this.setCropzoneRect(16 / 9);
+              break;
+            case 'preset-9-16':
+              this.setCropzoneRect(9 / 16);
               break;
             default:
               this.setCropzoneRect();
@@ -578,6 +630,11 @@ export default {
             this.ui.changeMenu('icon', false, false);
           }
           this.ui.icon.setIconPickerColor(obj.fill);
+        } else if (obj.type === 'watermark'){
+          this.ui.changeMenu('watermark', false, false);
+          this.ui.watermark.setOpacityOnAction(obj);
+        } else if (obj.type === 'i-image'){
+          this.ui.changeMenu('image', false, false);
         }
       },
       /* eslint-enable complexity */

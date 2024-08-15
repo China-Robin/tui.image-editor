@@ -25,6 +25,8 @@ import Draw from '@/ui/draw';
 import Filter from '@/ui/filter';
 import History from '@/ui/history';
 import Locale from '@/ui/locale/locale';
+import Image from '@/ui/image';
+import Watermark from '@/ui/watermark';
 
 const SUB_UI_COMPONENT = {
   Shape,
@@ -37,6 +39,8 @@ const SUB_UI_COMPONENT = {
   Icon,
   Draw,
   Filter,
+  Image,
+  Watermark,
 };
 
 const BI_EXPRESSION_MINSIZE_WHEN_TOP_POSITION = '1300';
@@ -260,6 +264,8 @@ class Ui {
           'text',
           'mask',
           'filter',
+          'image',
+          'watermark',
         ],
         initMenu: '',
         uiSize: {
@@ -306,6 +312,7 @@ class Ui {
         makeSvgIcon: this.theme.makeMenSvgIconSet.bind(this.theme),
         menuBarPosition: this.options.menuBarPosition,
         usageStatistics: this.options.usageStatistics,
+        menuParams: this.options.menuParams,
       });
     });
   }
@@ -494,7 +501,6 @@ class Ui {
     if (!isSilentCommand(command)) {
       const historyTitle =
         typeof command === 'string' ? { name: command } : getHistoryTitle(command);
-
       this._historyMenu.add(historyTitle);
     }
   }

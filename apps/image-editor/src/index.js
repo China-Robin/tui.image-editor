@@ -24,6 +24,8 @@ import '@/command/setObjectProperties';
 import '@/command/setObjectPosition';
 import '@/command/changeSelection';
 import '@/command/resize';
+import '@/command/addImage';
+import '@/command/addWatermark';
 
 export default ImageEditor;
 export { ImageEditor };

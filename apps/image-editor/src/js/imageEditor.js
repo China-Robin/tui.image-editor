@@ -774,6 +774,44 @@ class ImageEditor {
   }
 
   /**
+   * Add image object on canvas
+   * @param {string} imgUrl - Image url to make object
+   * @param originX
+   * @param originY
+   * @returns {Promise<ObjectProps, ErrorMsg>}
+   * @example
+   * imageEditor.addImageObject('path/fileName.jpg').then(objectProps => {
+   *     console.log(ojectProps.id);
+   * });
+   */
+  addImage(imgUrl, originX = 'center', originY = 'center') {
+    if (!imgUrl) {
+      return Promise.reject(rejectMessages.invalidParameters);
+    }
+
+    return this.execute(commands.ADD_IMAGE, imgUrl, originX, originY);
+  }
+
+  /**
+   * Add watermark image object on canvas
+   * @param {string} imgUrl - Image url to make object
+   * @param originX
+   * @param originY
+   * @returns {Promise<ObjectProps, ErrorMsg>}
+   * @example
+   * imageEditor.addImageObject('path/fileName.jpg').then(objectProps => {
+   *     console.log(ojectProps.id);
+   * });
+   */
+  addWatermarkImage(imgUrl, originX = 'center', originY = 'center') {
+    if (!imgUrl) {
+      return Promise.reject(rejectMessages.invalidParameters);
+    }
+
+    return this.execute(commands.ADD_WATERMARK, imgUrl, originX, originY);
+  }
+
+  /**
    * Start a drawing mode. If the current mode is not 'NORMAL', 'stopDrawingMode()' will be called first.
    * @param {String} mode Can be one of <I>'CROPPER', 'FREE_DRAWING', 'LINE_DRAWING', 'TEXT', 'SHAPE'</I>
    * @param {Object} [option] parameters of drawing mode, it's available with 'FREE_DRAWING', 'LINE_DRAWING'

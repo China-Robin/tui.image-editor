@@ -673,16 +673,23 @@ class Graphics {
   /**
    * Add image object on canvas
    * @param {string} imgUrl - Image url to make object
+   * @param originX 图片的原点位置
+   * @param originY 图片的原点位置
+   * @param type 图片的类型
    * @returns {Promise}
    */
-  addImageObject(imgUrl) {
+  // eslint-disable-next-line default-param-last
+  addImageObject(imgUrl, originX = 'center', originY = 'center', type) {
     const callback = this._callbackAfterLoadingImageObject.bind(this);
 
     return new Promise((resolve) => {
       fabric.Image.fromURL(
         imgUrl,
         (image) => {
-          callback(image);
+          if (type) {
+            image.type = type;
+          }
+          callback(image, originX, originY);
           resolve(this.createObjectProperties(image));
         },
         {
@@ -1066,12 +1073,49 @@ class Graphics {
   /**
    * Callback function after loading image
    * @param {fabric.Image} obj - Fabric image object
+   * @param originX
+   * @param originY
    * @private
    */
-  _callbackAfterLoadingImageObject(obj) {
-    const centerPos = this.getCanvasImage().getCenterPoint();
-
+  _callbackAfterLoadingImageObject(obj, originX = 'center', originY = 'center') {
+    // 获取中心点
+    // const centerPos = this.getCanvasImage().getCenterPoint();
+    // 获取指定点
+    const centerPos = this.getCanvasImage().getPointByOrigin(originX, originY);
+    const offset = 20;
     obj.set(fObjectOptions.SELECTION_STYLE);
+    // 根据originX, originY，减去obj的宽高的一半，计算九个位置的坐标，如果两个都是中心点不做处理
+    if (originX === 'left' && originY === 'top') {
+      // 左上角
+      centerPos.x += obj.width / 2 + offset;
+      centerPos.y += obj.height / 2 + offset;
+    } else if (originX === 'center' && originY === 'top') {
+      // 上中
+      centerPos.y += obj.height / 2 + offset;
+    } else if (originX === 'right' && originY === 'top') {
+      // 右上角
+      centerPos.x -= obj.width / 2 + offset;
+      centerPos.y += obj.height / 2 + offset;
+    } else if (originX === 'left' && originY === 'center') {
+      // 左中
+      centerPos.x += obj.width / 2 + offset;
+    } else if (originX === 'center' && originY === 'center') {
+      // 中心
+    } else if (originX === 'right' && originY === 'center') {
+      // 右中
+      centerPos.x -= obj.width / 2 + offset;
+    } else if (originX === 'left' && originY === 'bottom') {
+      // 左下
+      centerPos.x += obj.width / 2 + offset;
+      centerPos.y -= obj.height / 2 + offset;
+    } else if (originX === 'center' && originY === 'bottom') {
+      // 下中
+      centerPos.y -= obj.height / 2 + offset;
+    } else if (originX === 'right' && originY === 'bottom') {
+      // 右下
+      centerPos.x -= obj.width / 2 + offset;
+      centerPos.y -= obj.height / 2 + offset;
+    }
     obj.set({
       left: centerPos.x,
       top: centerPos.y,
@@ -1322,7 +1366,6 @@ class Graphics {
     };
 
     extend(props, getProperties(obj, predefinedKeys));
-
     if (includes(['i-text', 'text'], obj.type)) {
       extend(props, this._createTextProperties(obj, props));
     } else if (includes(['rect', 'triangle', 'circle'], obj.type)) {

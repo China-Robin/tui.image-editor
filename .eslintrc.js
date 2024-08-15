@@ -26,6 +26,9 @@ module.exports = {
         AssignmentExpression: { array: false, object: false },
       },
     ],
+    complexity: ['error', 20],
+    'no-debugger': 'off',
+    'no-console': 'off',
   },
   overrides: [
     {
