@@ -30806,1295 +30806,6 @@ fabric.util.object.extend(fabric.IText.prototype, /** @lends fabric.IText.protot
 
 /***/ }),
 
-/***/ 3053:
-/***/ (function(module, __unused_webpack_exports, __webpack_require__) {
-
-"use strict";
-/* eslint-disable complexity */
-/**
- * @fileoverview Returns the first index at which a given element can be found in the array.
- * @author NHN FE Development Lab <dl_javascript@nhn.com>
- */
-
-
-
-var isArray = __webpack_require__(602);
-
-/**
- * @module array
- */
-
-/**
- * Returns the first index at which a given element can be found in the array
- * from start index(default 0), or -1 if it is not present.
- * It compares searchElement to elements of the Array using strict equality
- * (the same method used by the ===, or triple-equals, operator).
- * @param {*} searchElement Element to locate in the array
- * @param {Array} array Array that will be traversed.
- * @param {number} startIndex Start index in array for searching (default 0)
- * @returns {number} the First index at which a given element, or -1 if it is not present
- * @memberof module:array
- * @example
- * // ES6
- * import inArray from 'tui-code-snippet/array/inArray';
- * 
- * // CommonJS
- * const inArray = require('tui-code-snippet/array/inArray');
- *
- * const arr = ['one', 'two', 'three', 'four'];
- * const idx1 = inArray('one', arr, 3); // -1
- * const idx2 = inArray('one', arr); // 0
- */
-function inArray(searchElement, array, startIndex) {
-  var i;
-  var length;
-  startIndex = startIndex || 0;
-
-  if (!isArray(array)) {
-    return -1;
-  }
-
-  if (Array.prototype.indexOf) {
-    return Array.prototype.indexOf.call(array, searchElement, startIndex);
-  }
-
-  length = array.length;
-  for (i = startIndex; startIndex >= 0 && i < length; i += 1) {
-    if (array[i] === searchElement) {
-      return i;
-    }
-  }
-
-  return -1;
-}
-
-module.exports = inArray;
-
-
-/***/ }),
-
-/***/ 8592:
-/***/ (function(module, __unused_webpack_exports, __webpack_require__) {
-
-"use strict";
-/**
- * @fileoverview Execute the provided callback once for each property of object(or element of array) which actually exist.
- * @author NHN FE Development Lab <dl_javascript@nhn.com>
- */
-
-
-
-var isArray = __webpack_require__(602);
-var forEachArray = __webpack_require__(6092);
-var forEachOwnProperties = __webpack_require__(5573);
-
-/**
- * @module collection
- */
-
-/**
- * Execute the provided callback once for each property of object(or element of array) which actually exist.
- * If the object is Array-like object(ex-arguments object), It needs to transform to Array.(see 'ex2' of example).
- * If the callback function returns false, the loop will be stopped.
- * Callback function(iteratee) is invoked with three arguments:
- *  1) The value of the property(or The value of the element)
- *  2) The name of the property(or The index of the element)
- *  3) The object being traversed
- * @param {Object} obj The object that will be traversed
- * @param {function} iteratee Callback function
- * @param {Object} [context] Context(this) of callback function
- * @memberof module:collection
- * @example
- * // ES6
- * import forEach from 'tui-code-snippet/collection/forEach'; 
- * 
- * // CommonJS
- * const forEach = require('tui-code-snippet/collection/forEach'); 
- *
- * let sum = 0;
- *
- * forEach([1,2,3], function(value){
- *   sum += value;
- * });
- * alert(sum); // 6
- *
- * // In case of Array-like object
- * const array = Array.prototype.slice.call(arrayLike); // change to array
- * forEach(array, function(value){
- *   sum += value;
- * });
- */
-function forEach(obj, iteratee, context) {
-  if (isArray(obj)) {
-    forEachArray(obj, iteratee, context);
-  } else {
-    forEachOwnProperties(obj, iteratee, context);
-  }
-}
-
-module.exports = forEach;
-
-
-/***/ }),
-
-/***/ 6092:
-/***/ (function(module) {
-
-"use strict";
-/**
- * @fileoverview Execute the provided callback once for each element present in the array(or Array-like object) in ascending order.
- * @author NHN FE Development Lab <dl_javascript@nhn.com>
- */
-
-
-
-/**
- * Execute the provided callback once for each element present
- * in the array(or Array-like object) in ascending order.
- * If the callback function returns false, the loop will be stopped.
- * Callback function(iteratee) is invoked with three arguments:
- *  1) The value of the element
- *  2) The index of the element
- *  3) The array(or Array-like object) being traversed
- * @param {Array|Arguments|NodeList} arr The array(or Array-like object) that will be traversed
- * @param {function} iteratee Callback function
- * @param {Object} [context] Context(this) of callback function
- * @memberof module:collection
- * @example
- * // ES6
- * import forEachArray from 'tui-code-snippet/collection/forEachArray';
- * 
- * // CommonJS
- * const forEachArray = require('tui-code-snippet/collection/forEachArray'); 
- *
- * let sum = 0;
- *
- * forEachArray([1,2,3], function(value){
- *   sum += value;
- * });
- * alert(sum); // 6
- */
-function forEachArray(arr, iteratee, context) {
-  var index = 0;
-  var len = arr.length;
-
-  context = context || null;
-
-  for (; index < len; index += 1) {
-    if (iteratee.call(context, arr[index], index, arr) === false) {
-      break;
-    }
-  }
-}
-
-module.exports = forEachArray;
-
-
-/***/ }),
-
-/***/ 5573:
-/***/ (function(module) {
-
-"use strict";
-/**
- * @fileoverview Execute the provided callback once for each property of object which actually exist.
- * @author NHN FE Development Lab <dl_javascript@nhn.com>
- */
-
-
-
-/**
- * Execute the provided callback once for each property of object which actually exist.
- * If the callback function returns false, the loop will be stopped.
- * Callback function(iteratee) is invoked with three arguments:
- *  1) The value of the property
- *  2) The name of the property
- *  3) The object being traversed
- * @param {Object} obj The object that will be traversed
- * @param {function} iteratee  Callback function
- * @param {Object} [context] Context(this) of callback function
- * @memberof module:collection
- * @example
- * // ES6
- * import forEachOwnProperties from 'tui-code-snippet/collection/forEachOwnProperties';
- * 
- * // CommonJS
- * const forEachOwnProperties = require('tui-code-snippet/collection/forEachOwnProperties'); 
- *
- * let sum = 0;
- *
- * forEachOwnProperties({a:1,b:2,c:3}, function(value){
- *   sum += value;
- * });
- * alert(sum); // 6
- */
-function forEachOwnProperties(obj, iteratee, context) {
-  var key;
-
-  context = context || null;
-
-  for (key in obj) {
-    if (obj.hasOwnProperty(key)) {
-      if (iteratee.call(context, obj[key], key, obj) === false) {
-        break;
-      }
-    }
-  }
-}
-
-module.exports = forEachOwnProperties;
-
-
-/***/ }),
-
-/***/ 9052:
-/***/ (function(module, __unused_webpack_exports, __webpack_require__) {
-
-"use strict";
-/**
- * @fileoverview This module provides some functions for custom events. And it is implemented in the observer design pattern.
- * @author NHN FE Development Lab <dl_javascript@nhn.com>
- */
-
-
-
-var extend = __webpack_require__(961);
-var isExisty = __webpack_require__(9886);
-var isString = __webpack_require__(2560);
-var isObject = __webpack_require__(5393);
-var isArray = __webpack_require__(602);
-var isFunction = __webpack_require__(5183);
-var forEach = __webpack_require__(8592);
-
-var R_EVENTNAME_SPLIT = /\s+/g;
-
-/**
- * @class
- * @example
- * // ES6
- * import CustomEvents from 'tui-code-snippet/customEvents/customEvents';
- * 
- * // CommonJS
- * const CustomEvents = require('tui-code-snippet/customEvents/customEvents'); 
- */
-function CustomEvents() {
-  /**
-     * @type {HandlerItem[]}
-     */
-  this.events = null;
-
-  /**
-     * only for checking specific context event was binded
-     * @type {object[]}
-     */
-  this.contexts = null;
-}
-
-/**
- * Mixin custom events feature to specific constructor
- * @param {function} func - constructor
- * @example
- * //ES6
- * import CustomEvents from 'tui-code-snippet/customEvents/customEvents'; 
- * 
- * // CommonJS
- * const CustomEvents = require('tui-code-snippet/customEvents/customEvents'); 
- *
- * function Model() {
- *     this.name = '';
- * }
- * CustomEvents.mixin(Model);
- *
- * const model = new Model();
- * model.on('change', function() { this.name = 'model'; }, this);
- * model.fire('change');
- * alert(model.name); // 'model';
- */
-CustomEvents.mixin = function(func) {
-  extend(func.prototype, CustomEvents.prototype);
-};
-
-/**
- * Get HandlerItem object
- * @param {function} handler - handler function
- * @param {object} [context] - context for handler
- * @returns {HandlerItem} HandlerItem object
- * @private
- */
-CustomEvents.prototype._getHandlerItem = function(handler, context) {
-  var item = {handler: handler};
-
-  if (context) {
-    item.context = context;
-  }
-
-  return item;
-};
-
-/**
- * Get event object safely
- * @param {string} [eventName] - create sub event map if not exist.
- * @returns {(object|array)} event object. if you supplied `eventName`
- *  parameter then make new array and return it
- * @private
- */
-CustomEvents.prototype._safeEvent = function(eventName) {
-  var events = this.events;
-  var byName;
-
-  if (!events) {
-    events = this.events = {};
-  }
-
-  if (eventName) {
-    byName = events[eventName];
-
-    if (!byName) {
-      byName = [];
-      events[eventName] = byName;
-    }
-
-    events = byName;
-  }
-
-  return events;
-};
-
-/**
- * Get context array safely
- * @returns {array} context array
- * @private
- */
-CustomEvents.prototype._safeContext = function() {
-  var context = this.contexts;
-
-  if (!context) {
-    context = this.contexts = [];
-  }
-
-  return context;
-};
-
-/**
- * Get index of context
- * @param {object} ctx - context that used for bind custom event
- * @returns {number} index of context
- * @private
- */
-CustomEvents.prototype._indexOfContext = function(ctx) {
-  var context = this._safeContext();
-  var index = 0;
-
-  while (context[index]) {
-    if (ctx === context[index][0]) {
-      return index;
-    }
-
-    index += 1;
-  }
-
-  return -1;
-};
-
-/**
- * Memorize supplied context for recognize supplied object is context or
- *  name: handler pair object when off()
- * @param {object} ctx - context object to memorize
- * @private
- */
-CustomEvents.prototype._memorizeContext = function(ctx) {
-  var context, index;
-
-  if (!isExisty(ctx)) {
-    return;
-  }
-
-  context = this._safeContext();
-  index = this._indexOfContext(ctx);
-
-  if (index > -1) {
-    context[index][1] += 1;
-  } else {
-    context.push([ctx, 1]);
-  }
-};
-
-/**
- * Forget supplied context object
- * @param {object} ctx - context object to forget
- * @private
- */
-CustomEvents.prototype._forgetContext = function(ctx) {
-  var context, contextIndex;
-
-  if (!isExisty(ctx)) {
-    return;
-  }
-
-  context = this._safeContext();
-  contextIndex = this._indexOfContext(ctx);
-
-  if (contextIndex > -1) {
-    context[contextIndex][1] -= 1;
-
-    if (context[contextIndex][1] <= 0) {
-      context.splice(contextIndex, 1);
-    }
-  }
-};
-
-/**
- * Bind event handler
- * @param {(string|{name:string, handler:function})} eventName - custom
- *  event name or an object {eventName: handler}
- * @param {(function|object)} [handler] - handler function or context
- * @param {object} [context] - context for binding
- * @private
- */
-CustomEvents.prototype._bindEvent = function(eventName, handler, context) {
-  var events = this._safeEvent(eventName);
-  this._memorizeContext(context);
-  events.push(this._getHandlerItem(handler, context));
-};
-
-/**
- * Bind event handlers
- * @param {(string|{name:string, handler:function})} eventName - custom
- *  event name or an object {eventName: handler}
- * @param {(function|object)} [handler] - handler function or context
- * @param {object} [context] - context for binding
- * //-- #1. Get Module --//
- * // ES6
- * import CustomEvents from 'tui-code-snippet/customEvents/customEvents'; 
- * 
- * // CommonJS
- * const CustomEvents = require('tui-code-snippet/customEvents/customEvents'); 
- *
- * //-- #2. Use method --//
- * // # 2.1 Basic Usage
- * CustomEvents.on('onload', handler);
- *
- * // # 2.2 With context
- * CustomEvents.on('onload', handler, myObj);
- *
- * // # 2.3 Bind by object that name, handler pairs
- * CustomEvents.on({
- *     'play': handler,
- *     'pause': handler2
- * });
- *
- * // # 2.4 Bind by object that name, handler pairs with context object
- * CustomEvents.on({
- *     'play': handler
- * }, myObj);
- */
-CustomEvents.prototype.on = function(eventName, handler, context) {
-  var self = this;
-
-  if (isString(eventName)) {
-    // [syntax 1, 2]
-    eventName = eventName.split(R_EVENTNAME_SPLIT);
-    forEach(eventName, function(name) {
-      self._bindEvent(name, handler, context);
-    });
-  } else if (isObject(eventName)) {
-    // [syntax 3, 4]
-    context = handler;
-    forEach(eventName, function(func, name) {
-      self.on(name, func, context);
-    });
-  }
-};
-
-/**
- * Bind one-shot event handlers
- * @param {(string|{name:string,handler:function})} eventName - custom
- *  event name or an object {eventName: handler}
- * @param {function|object} [handler] - handler function or context
- * @param {object} [context] - context for binding
- */
-CustomEvents.prototype.once = function(eventName, handler, context) {
-  var self = this;
-
-  if (isObject(eventName)) {
-    context = handler;
-    forEach(eventName, function(func, name) {
-      self.once(name, func, context);
-    });
-
-    return;
-  }
-
-  function onceHandler() { // eslint-disable-line require-jsdoc
-    handler.apply(context, arguments);
-    self.off(eventName, onceHandler, context);
-  }
-
-  this.on(eventName, onceHandler, context);
-};
-
-/**
- * Splice supplied array by callback result
- * @param {array} arr - array to splice
- * @param {function} predicate - function return boolean
- * @private
- */
-CustomEvents.prototype._spliceMatches = function(arr, predicate) {
-  var i = 0;
-  var len;
-
-  if (!isArray(arr)) {
-    return;
-  }
-
-  for (len = arr.length; i < len; i += 1) {
-    if (predicate(arr[i]) === true) {
-      arr.splice(i, 1);
-      len -= 1;
-      i -= 1;
-    }
-  }
-};
-
-/**
- * Get matcher for unbind specific handler events
- * @param {function} handler - handler function
- * @returns {function} handler matcher
- * @private
- */
-CustomEvents.prototype._matchHandler = function(handler) {
-  var self = this;
-
-  return function(item) {
-    var needRemove = handler === item.handler;
-
-    if (needRemove) {
-      self._forgetContext(item.context);
-    }
-
-    return needRemove;
-  };
-};
-
-/**
- * Get matcher for unbind specific context events
- * @param {object} context - context
- * @returns {function} object matcher
- * @private
- */
-CustomEvents.prototype._matchContext = function(context) {
-  var self = this;
-
-  return function(item) {
-    var needRemove = context === item.context;
-
-    if (needRemove) {
-      self._forgetContext(item.context);
-    }
-
-    return needRemove;
-  };
-};
-
-/**
- * Get matcher for unbind specific hander, context pair events
- * @param {function} handler - handler function
- * @param {object} context - context
- * @returns {function} handler, context matcher
- * @private
- */
-CustomEvents.prototype._matchHandlerAndContext = function(handler, context) {
-  var self = this;
-
-  return function(item) {
-    var matchHandler = (handler === item.handler);
-    var matchContext = (context === item.context);
-    var needRemove = (matchHandler && matchContext);
-
-    if (needRemove) {
-      self._forgetContext(item.context);
-    }
-
-    return needRemove;
-  };
-};
-
-/**
- * Unbind event by event name
- * @param {string} eventName - custom event name to unbind
- * @param {function} [handler] - handler function
- * @private
- */
-CustomEvents.prototype._offByEventName = function(eventName, handler) {
-  var self = this;
-  var andByHandler = isFunction(handler);
-  var matchHandler = self._matchHandler(handler);
-
-  eventName = eventName.split(R_EVENTNAME_SPLIT);
-
-  forEach(eventName, function(name) {
-    var handlerItems = self._safeEvent(name);
-
-    if (andByHandler) {
-      self._spliceMatches(handlerItems, matchHandler);
-    } else {
-      forEach(handlerItems, function(item) {
-        self._forgetContext(item.context);
-      });
-
-      self.events[name] = [];
-    }
-  });
-};
-
-/**
- * Unbind event by handler function
- * @param {function} handler - handler function
- * @private
- */
-CustomEvents.prototype._offByHandler = function(handler) {
-  var self = this;
-  var matchHandler = this._matchHandler(handler);
-
-  forEach(this._safeEvent(), function(handlerItems) {
-    self._spliceMatches(handlerItems, matchHandler);
-  });
-};
-
-/**
- * Unbind event by object(name: handler pair object or context object)
- * @param {object} obj - context or {name: handler} pair object
- * @param {function} handler - handler function
- * @private
- */
-CustomEvents.prototype._offByObject = function(obj, handler) {
-  var self = this;
-  var matchFunc;
-
-  if (this._indexOfContext(obj) < 0) {
-    forEach(obj, function(func, name) {
-      self.off(name, func);
-    });
-  } else if (isString(handler)) {
-    matchFunc = this._matchContext(obj);
-
-    self._spliceMatches(this._safeEvent(handler), matchFunc);
-  } else if (isFunction(handler)) {
-    matchFunc = this._matchHandlerAndContext(handler, obj);
-
-    forEach(this._safeEvent(), function(handlerItems) {
-      self._spliceMatches(handlerItems, matchFunc);
-    });
-  } else {
-    matchFunc = this._matchContext(obj);
-
-    forEach(this._safeEvent(), function(handlerItems) {
-      self._spliceMatches(handlerItems, matchFunc);
-    });
-  }
-};
-
-/**
- * Unbind custom events
- * @param {(string|object|function)} eventName - event name or context or
- *  {name: handler} pair object or handler function
- * @param {(function)} handler - handler function
- * @example
- * //-- #1. Get Module --//
- * // ES6
- * import CustomEvents from 'tui-code-snippet/customEvents/customEvents'; 
- * 
- * // CommonJS
- * const CustomEvents = require('tui-code-snippet/customEvents/customEvents'); 
- *
- * //-- #2. Use method --//
- * // # 2.1 off by event name
- * CustomEvents.off('onload');
- *
- * // # 2.2 off by event name and handler
- * CustomEvents.off('play', handler);
- *
- * // # 2.3 off by handler
- * CustomEvents.off(handler);
- *
- * // # 2.4 off by context
- * CustomEvents.off(myObj);
- *
- * // # 2.5 off by context and handler
- * CustomEvents.off(myObj, handler);
- *
- * // # 2.6 off by context and event name
- * CustomEvents.off(myObj, 'onload');
- *
- * // # 2.7 off by an Object.<string, function> that is {eventName: handler}
- * CustomEvents.off({
- *   'play': handler,
- *   'pause': handler2
- * });
- *
- * // # 2.8 off the all events
- * CustomEvents.off();
- */
-CustomEvents.prototype.off = function(eventName, handler) {
-  if (isString(eventName)) {
-    // [syntax 1, 2]
-    this._offByEventName(eventName, handler);
-  } else if (!arguments.length) {
-    // [syntax 8]
-    this.events = {};
-    this.contexts = [];
-  } else if (isFunction(eventName)) {
-    // [syntax 3]
-    this._offByHandler(eventName);
-  } else if (isObject(eventName)) {
-    // [syntax 4, 5, 6]
-    this._offByObject(eventName, handler);
-  }
-};
-
-/**
- * Fire custom event
- * @param {string} eventName - name of custom event
- */
-CustomEvents.prototype.fire = function(eventName) {  // eslint-disable-line
-  this.invoke.apply(this, arguments);
-};
-
-/**
- * Fire a event and returns the result of operation 'boolean AND' with all
- *  listener's results.
- *
- * So, It is different from {@link CustomEvents#fire}.
- *
- * In service code, use this as a before event in component level usually
- *  for notifying that the event is cancelable.
- * @param {string} eventName - Custom event name
- * @param {...*} data - Data for event
- * @returns {boolean} The result of operation 'boolean AND'
- * @example
- * const map = new Map();
- * map.on({
- *   'beforeZoom': function() {
- *     // It should cancel the 'zoom' event by some conditions.
- *     if (that.disabled && this.getState()) {
- *       return false;
- *     }
- *     return true;
- *   }
- * });
- *
- * if (this.invoke('beforeZoom')) {    // check the result of 'beforeZoom'
- *   // if true,
- *   // doSomething
- * }
- */
-CustomEvents.prototype.invoke = function(eventName) {
-  var events, args, index, item;
-
-  if (!this.hasListener(eventName)) {
-    return true;
-  }
-
-  events = this._safeEvent(eventName);
-  args = Array.prototype.slice.call(arguments, 1);
-  index = 0;
-
-  while (events[index]) {
-    item = events[index];
-
-    if (item.handler.apply(item.context, args) === false) {
-      return false;
-    }
-
-    index += 1;
-  }
-
-  return true;
-};
-
-/**
- * Return whether at least one of the handlers is registered in the given
- *  event name.
- * @param {string} eventName - Custom event name
- * @returns {boolean} Is there at least one handler in event name?
- */
-CustomEvents.prototype.hasListener = function(eventName) {
-  return this.getListenerLength(eventName) > 0;
-};
-
-/**
- * Return a count of events registered.
- * @param {string} eventName - Custom event name
- * @returns {number} number of event
- */
-CustomEvents.prototype.getListenerLength = function(eventName) {
-  var events = this._safeEvent(eventName);
-
-  return events.length;
-};
-
-module.exports = CustomEvents;
-
-
-/***/ }),
-
-/***/ 961:
-/***/ (function(module) {
-
-"use strict";
-/**
- * @fileoverview Extend the target object from other objects.
- * @author NHN FE Development Lab <dl_javascript@nhn.com>
- */
-
-
-
-/**
- * @module object
- */
-
-/**
- * Extend the target object from other objects.
- * @param {object} target - Object that will be extended
- * @param {...object} objects - Objects as sources
- * @returns {object} Extended object
- * @memberof module:object
- */
-function extend(target, objects) { // eslint-disable-line no-unused-vars
-  var hasOwnProp = Object.prototype.hasOwnProperty;
-  var source, prop, i, len;
-
-  for (i = 1, len = arguments.length; i < len; i += 1) {
-    source = arguments[i];
-    for (prop in source) {
-      if (hasOwnProp.call(source, prop)) {
-        target[prop] = source[prop];
-      }
-    }
-  }
-
-  return target;
-}
-
-module.exports = extend;
-
-
-/***/ }),
-
-/***/ 1610:
-/***/ (function(module, __unused_webpack_exports, __webpack_require__) {
-
-"use strict";
-/**
- * @fileoverview Retrieve a nested item from the given object/array.
- * @author NHN FE Development Lab <dl_javascript@nhn.com>
- */
-
-
-
-var isUndefined = __webpack_require__(5695);
-var isNull = __webpack_require__(3778);
-
-/**
- * Retrieve a nested item from the given object/array.
- * @param {object|Array} obj - Object for retrieving
- * @param {...string|number} paths - Paths of property
- * @returns {*} Value
- * @memberof module:object
- * @example
- * // ES6
- * import pick from 'tui-code-snippet/object/pick';
- * 
- * // CommonJS
- * const pick = require('tui-code-snippet/object/pick');
- *
- * cosnt obj = {
- *   'key1': 1,
- *   'nested' : {
- *     'key1': 11,
- *     'nested': {
- *       'key1': 21
- *     }
- *   }
- * };
- * pick(obj, 'nested', 'nested', 'key1'); // 21
- * pick(obj, 'nested', 'nested', 'key2'); // undefined
- *
- * const arr = ['a', 'b', 'c'];
- * pick(arr, 1); // 'b'
- */
-function pick(obj, paths) { // eslint-disable-line no-unused-vars
-  var args = arguments;
-  var target = args[0];
-  var i = 1;
-  var length = args.length;
-
-  for (; i < length; i += 1) {
-    if (isUndefined(target) ||
-            isNull(target)) {
-      return;
-    }
-
-    target = target[args[i]];
-  }
-
-  return target; // eslint-disable-line consistent-return
-}
-
-module.exports = pick;
-
-
-/***/ }),
-
-/***/ 4564:
-/***/ (function(module, __unused_webpack_exports, __webpack_require__) {
-
-"use strict";
-/**
- * @fileoverview Request image ping.
- * @author NHN FE Development Lab <dl_javascript@nhn.com>
- */
-
-
-
-var forEachOwnProperties = __webpack_require__(5573);
-
-/**
- * @module request
- */
-
-/**
- * Request image ping.
- * @param {String} url url for ping request
- * @param {Object} trackingInfo infos for make query string
- * @returns {HTMLElement}
- * @memberof module:request
- * @example
- * // ES6
- * import imagePing from 'tui-code-snippet/request/imagePing';
- * 
- * // CommonJS
- * const imagePing = require('tui-code-snippet/request/imagePing');
- *
- * imagePing('https://www.google-analytics.com/collect', {
- *   v: 1,
- *   t: 'event',
- *   tid: 'trackingid',
- *   cid: 'cid',
- *   dp: 'dp',
- *   dh: 'dh'
- * });
- */
-function imagePing(url, trackingInfo) {
-  var trackingElement = document.createElement('img');
-  var queryString = '';
-  forEachOwnProperties(trackingInfo, function(value, key) {
-    queryString += '&' + key + '=' + value;
-  });
-  queryString = queryString.substring(1);
-
-  trackingElement.src = url + '?' + queryString;
-
-  trackingElement.style.display = 'none';
-  document.body.appendChild(trackingElement);
-  document.body.removeChild(trackingElement);
-
-  return trackingElement;
-}
-
-module.exports = imagePing;
-
-
-/***/ }),
-
-/***/ 4729:
-/***/ (function(module, __unused_webpack_exports, __webpack_require__) {
-
-"use strict";
-/**
- * @fileoverview Send hostname on DOMContentLoaded.
- * @author NHN FE Development Lab <dl_javascript@nhn.com>
- */
-
-
-
-var isUndefined = __webpack_require__(5695);
-var imagePing = __webpack_require__(4564);
-
-var ms7days = 7 * 24 * 60 * 60 * 1000;
-
-/**
- * Check if the date has passed 7 days
- * @param {number} date - milliseconds
- * @returns {boolean}
- * @private
- */
-function isExpired(date) {
-  var now = new Date().getTime();
-
-  return now - date > ms7days;
-}
-
-/**
- * Send hostname on DOMContentLoaded.
- * To prevent hostname set tui.usageStatistics to false.
- * @param {string} appName - application name
- * @param {string} trackingId - GA tracking ID
- * @ignore
- */
-function sendHostname(appName, trackingId) {
-  var url = 'https://www.google-analytics.com/collect';
-  var hostname = location.hostname;
-  var hitType = 'event';
-  var eventCategory = 'use';
-  var applicationKeyForStorage = 'TOAST UI ' + appName + ' for ' + hostname + ': Statistics';
-  var date = window.localStorage.getItem(applicationKeyForStorage);
-
-  // skip if the flag is defined and is set to false explicitly
-  if (!isUndefined(window.tui) && window.tui.usageStatistics === false) {
-    return;
-  }
-
-  // skip if not pass seven days old
-  if (date && !isExpired(date)) {
-    return;
-  }
-
-  window.localStorage.setItem(applicationKeyForStorage, new Date().getTime());
-
-  setTimeout(function() {
-    if (document.readyState === 'interactive' || document.readyState === 'complete') {
-      imagePing(url, {
-        v: 1,
-        t: hitType,
-        tid: trackingId,
-        cid: hostname,
-        dp: hostname,
-        dh: appName,
-        el: appName,
-        ec: eventCategory
-      });
-    }
-  }, 1000);
-}
-
-module.exports = sendHostname;
-
-
-/***/ }),
-
-/***/ 602:
-/***/ (function(module) {
-
-"use strict";
-/**
- * @fileoverview Check whether the given variable is an instance of Array or not.
- * @author NHN FE Development Lab <dl_javascript@nhn.com>
- */
-
-
-
-/**
- * Check whether the given variable is an instance of Array or not.
- * If the given variable is an instance of Array, return true.
- * @param {*} obj - Target for checking
- * @returns {boolean} Is array instance?
- * @memberof module:type
- */
-function isArray(obj) {
-  return obj instanceof Array;
-}
-
-module.exports = isArray;
-
-
-/***/ }),
-
-/***/ 9886:
-/***/ (function(module, __unused_webpack_exports, __webpack_require__) {
-
-"use strict";
-/**
- * @fileoverview Check whether the given variable is existing or not.
- * @author NHN FE Development Lab <dl_javascript@nhn.com>
- */
-
-
-
-var isUndefined = __webpack_require__(5695);
-var isNull = __webpack_require__(3778);
-
-/**
- * Check whether the given variable is existing or not.
- * If the given variable is not null and not undefined, returns true.
- * @param {*} param - Target for checking
- * @returns {boolean} Is existy?
- * @memberof module:type
- * @example
- * // ES6
- * import isExisty from 'tui-code-snippet/type/isExisty');
- * 
- * // CommonJS
- * const isExisty = require('tui-code-snippet/type/isExisty');
- *
- * isExisty(''); //true
- * isExisty(0); //true
- * isExisty([]); //true
- * isExisty({}); //true
- * isExisty(null); //false
- * isExisty(undefined); //false
-*/
-function isExisty(param) {
-  return !isUndefined(param) && !isNull(param);
-}
-
-module.exports = isExisty;
-
-
-/***/ }),
-
-/***/ 5183:
-/***/ (function(module) {
-
-"use strict";
-/**
- * @fileoverview Check whether the given variable is a function or not.
- * @author NHN FE Development Lab <dl_javascript@nhn.com>
- */
-
-
-
-/**
- * Check whether the given variable is a function or not.
- * If the given variable is a function, return true.
- * @param {*} obj - Target for checking
- * @returns {boolean} Is function?
- * @memberof module:type
- */
-function isFunction(obj) {
-  return obj instanceof Function;
-}
-
-module.exports = isFunction;
-
-
-/***/ }),
-
-/***/ 3778:
-/***/ (function(module) {
-
-"use strict";
-/**
- * @fileoverview Check whether the given variable is null or not.
- * @author NHN FE Development Lab <dl_javascript@nhn.com>
- */
-
-
-
-/**
- * Check whether the given variable is null or not.
- * If the given variable(arguments[0]) is null, returns true.
- * @param {*} obj - Target for checking
- * @returns {boolean} Is null?
- * @memberof module:type
- */
-function isNull(obj) {
-  return obj === null;
-}
-
-module.exports = isNull;
-
-
-/***/ }),
-
-/***/ 5393:
-/***/ (function(module) {
-
-"use strict";
-/**
- * @fileoverview Check whether the given variable is an object or not.
- * @author NHN FE Development Lab <dl_javascript@nhn.com>
- */
-
-
-
-/**
- * Check whether the given variable is an object or not.
- * If the given variable is an object, return true.
- * @param {*} obj - Target for checking
- * @returns {boolean} Is object?
- * @memberof module:type
- */
-function isObject(obj) {
-  return obj === Object(obj);
-}
-
-module.exports = isObject;
-
-
-/***/ }),
-
-/***/ 2560:
-/***/ (function(module) {
-
-"use strict";
-/**
- * @fileoverview Check whether the given variable is a string or not.
- * @author NHN FE Development Lab <dl_javascript@nhn.com>
- */
-
-
-
-/**
- * Check whether the given variable is a string or not.
- * If the given variable is a string, return true.
- * @param {*} obj - Target for checking
- * @returns {boolean} Is string?
- * @memberof module:type
- */
-function isString(obj) {
-  return typeof obj === 'string' || obj instanceof String;
-}
-
-module.exports = isString;
-
-
-/***/ }),
-
-/***/ 5695:
-/***/ (function(module) {
-
-"use strict";
-/**
- * @fileoverview Check whether the given variable is undefined or not.
- * @author NHN FE Development Lab <dl_javascript@nhn.com>
- */
-
-
-
-/**
- * Check whether the given variable is undefined or not.
- * If the given variable is undefined, returns true.
- * @param {*} obj - Target for checking
- * @returns {boolean} Is undefined?
- * @memberof module:type
- */
-function isUndefined(obj) {
-  return obj === undefined; // eslint-disable-line no-undefined
-}
-
-module.exports = isUndefined;
-
-
-/***/ }),
-
-/***/ 4426:
-/***/ (function(module, __unused_webpack_exports, __webpack_require__) {
-
-module.exports = __webpack_require__(4486);
-
-/***/ }),
-
 /***/ 9406:
 /***/ (function(module, __unused_webpack_exports, __webpack_require__) {
 
@@ -32113,20 +30824,6 @@ module.exports = __webpack_require__(7178);
 /***/ (function(module, __unused_webpack_exports, __webpack_require__) {
 
 module.exports = __webpack_require__(5603);
-
-/***/ }),
-
-/***/ 7636:
-/***/ (function(module, __unused_webpack_exports, __webpack_require__) {
-
-module.exports = __webpack_require__(1206);
-
-/***/ }),
-
-/***/ 1899:
-/***/ (function(module, __unused_webpack_exports, __webpack_require__) {
-
-module.exports = __webpack_require__(6174);
 
 /***/ }),
 
@@ -32165,38 +30862,10 @@ module.exports = __webpack_require__(172);
 
 /***/ }),
 
-/***/ 6065:
-/***/ (function(module, __unused_webpack_exports, __webpack_require__) {
-
-module.exports = __webpack_require__(4963);
-
-/***/ }),
-
-/***/ 1734:
-/***/ (function(module, __unused_webpack_exports, __webpack_require__) {
-
-module.exports = __webpack_require__(7820);
-
-/***/ }),
-
 /***/ 2461:
 /***/ (function(module, __unused_webpack_exports, __webpack_require__) {
 
 module.exports = __webpack_require__(5636);
-
-/***/ }),
-
-/***/ 5214:
-/***/ (function(module, __unused_webpack_exports, __webpack_require__) {
-
-module.exports = __webpack_require__(5059);
-
-/***/ }),
-
-/***/ 6397:
-/***/ (function(module, __unused_webpack_exports, __webpack_require__) {
-
-module.exports = __webpack_require__(3969);
 
 /***/ }),
 
@@ -32211,13 +30880,6 @@ module.exports = __webpack_require__(6618);
 /***/ (function(module, __unused_webpack_exports, __webpack_require__) {
 
 module.exports = __webpack_require__(5279);
-
-/***/ }),
-
-/***/ 4496:
-/***/ (function(module, __unused_webpack_exports, __webpack_require__) {
-
-module.exports = __webpack_require__(9562);
 
 /***/ }),
 
@@ -32599,28 +31261,6 @@ module.exports = entryVirtual('Array').filter;
 
 /***/ }),
 
-/***/ 98:
-/***/ (function(module, __unused_webpack_exports, __webpack_require__) {
-
-__webpack_require__(9823);
-var entryVirtual = __webpack_require__(5607);
-
-module.exports = entryVirtual('Array').forEach;
-
-
-/***/ }),
-
-/***/ 2089:
-/***/ (function(module, __unused_webpack_exports, __webpack_require__) {
-
-__webpack_require__(2276);
-var entryVirtual = __webpack_require__(5607);
-
-module.exports = entryVirtual('Array').indexOf;
-
-
-/***/ }),
-
 /***/ 6209:
 /***/ (function(module, __unused_webpack_exports, __webpack_require__) {
 
@@ -32654,17 +31294,6 @@ module.exports = entryVirtual('Array').splice;
 
 /***/ }),
 
-/***/ 3528:
-/***/ (function(module, __unused_webpack_exports, __webpack_require__) {
-
-__webpack_require__(665);
-var entryVirtual = __webpack_require__(5607);
-
-module.exports = entryVirtual('Function').bind;
-
-
-/***/ }),
-
 /***/ 5739:
 /***/ (function(module, __unused_webpack_exports, __webpack_require__) {
 
@@ -32673,21 +31302,6 @@ __webpack_require__(5454);
 var getIteratorMethod = __webpack_require__(8703);
 
 module.exports = getIteratorMethod;
-
-
-/***/ }),
-
-/***/ 278:
-/***/ (function(module, __unused_webpack_exports, __webpack_require__) {
-
-var bind = __webpack_require__(3528);
-
-var FunctionPrototype = Function.prototype;
-
-module.exports = function (it) {
-  var own = it.bind;
-  return it === FunctionPrototype || (it instanceof Function && own === FunctionPrototype.bind) ? bind : own;
-};
 
 
 /***/ }),
@@ -32732,21 +31346,6 @@ var ArrayPrototype = Array.prototype;
 module.exports = function (it) {
   var own = it.filter;
   return it === ArrayPrototype || (it instanceof Array && own === ArrayPrototype.filter) ? filter : own;
-};
-
-
-/***/ }),
-
-/***/ 2604:
-/***/ (function(module, __unused_webpack_exports, __webpack_require__) {
-
-var indexOf = __webpack_require__(2089);
-
-var ArrayPrototype = Array.prototype;
-
-module.exports = function (it) {
-  var own = it.indexOf;
-  return it === ArrayPrototype || (it instanceof Array && own === ArrayPrototype.indexOf) ? indexOf : own;
 };
 
 
@@ -32885,28 +31484,6 @@ __webpack_require__(3222);
 var path = __webpack_require__(7545);
 
 module.exports = path.Object.setPrototypeOf;
-
-
-/***/ }),
-
-/***/ 2987:
-/***/ (function(module, __unused_webpack_exports, __webpack_require__) {
-
-__webpack_require__(4859);
-var path = __webpack_require__(7545);
-
-module.exports = path.parseFloat;
-
-
-/***/ }),
-
-/***/ 2239:
-/***/ (function(module, __unused_webpack_exports, __webpack_require__) {
-
-__webpack_require__(5706);
-var path = __webpack_require__(7545);
-
-module.exports = path.parseInt;
 
 
 /***/ }),
@@ -33205,26 +31782,6 @@ module.exports = function fill(value /* , start = 0, end = @length */) {
 
 /***/ }),
 
-/***/ 7397:
-/***/ (function(module, __unused_webpack_exports, __webpack_require__) {
-
-"use strict";
-
-var $forEach = __webpack_require__(454).forEach;
-var arrayMethodIsStrict = __webpack_require__(424);
-
-var STRICT_METHOD = arrayMethodIsStrict('forEach');
-
-// `Array.prototype.forEach` method implementation
-// https://tc39.es/ecma262/#sec-array.prototype.foreach
-module.exports = !STRICT_METHOD ? function forEach(callbackfn /* , thisArg */) {
-  return $forEach(this, callbackfn, arguments.length > 1 ? arguments[1] : undefined);
-// eslint-disable-next-line es/no-array-prototype-foreach -- safe
-} : [].forEach;
-
-
-/***/ }),
-
 /***/ 841:
 /***/ (function(module, __unused_webpack_exports, __webpack_require__) {
 
@@ -33414,24 +31971,6 @@ module.exports = function (METHOD_NAME) {
       return { foo: 1 };
     };
     return array[METHOD_NAME](Boolean).foo !== 1;
-  });
-};
-
-
-/***/ }),
-
-/***/ 424:
-/***/ (function(module, __unused_webpack_exports, __webpack_require__) {
-
-"use strict";
-
-var fails = __webpack_require__(6192);
-
-module.exports = function (METHOD_NAME, argument) {
-  var method = [][METHOD_NAME];
-  return !!method && fails(function () {
-    // eslint-disable-next-line no-useless-call,no-throw-literal -- required for testing
-    method.call(null, argument || function () { throw 1; }, 1);
   });
 };
 
@@ -35023,33 +33562,6 @@ module.exports.f = function (C) {
 
 /***/ }),
 
-/***/ 15:
-/***/ (function(module, __unused_webpack_exports, __webpack_require__) {
-
-var global = __webpack_require__(8576);
-var fails = __webpack_require__(6192);
-var toString = __webpack_require__(4845);
-var trim = __webpack_require__(4277).trim;
-var whitespaces = __webpack_require__(1450);
-
-var $parseFloat = global.parseFloat;
-var Symbol = global.Symbol;
-var ITERATOR = Symbol && Symbol.iterator;
-var FORCED = 1 / $parseFloat(whitespaces + '-0') !== -Infinity
-  // MS Edge 18- broken with boxed symbols
-  || (ITERATOR && !fails(function () { $parseFloat(Object(ITERATOR)); }));
-
-// `parseFloat` method
-// https://tc39.es/ecma262/#sec-parsefloat-string
-module.exports = FORCED ? function parseFloat(string) {
-  var trimmedString = trim(toString(string));
-  var result = $parseFloat(trimmedString);
-  return result === 0 && trimmedString.charAt(0) == '-' ? -0 : result;
-} : $parseFloat;
-
-
-/***/ }),
-
 /***/ 2558:
 /***/ (function(module, __unused_webpack_exports, __webpack_require__) {
 
@@ -36528,24 +35040,6 @@ $({ target: 'Array', proto: true, forced: !HAS_SPECIES_SUPPORT }, {
 
 /***/ }),
 
-/***/ 9823:
-/***/ (function(__unused_webpack_module, __unused_webpack_exports, __webpack_require__) {
-
-"use strict";
-
-var $ = __webpack_require__(3085);
-var forEach = __webpack_require__(7397);
-
-// `Array.prototype.forEach` method
-// https://tc39.es/ecma262/#sec-array.prototype.foreach
-// eslint-disable-next-line es/no-array-prototype-foreach -- safe
-$({ target: 'Array', proto: true, forced: [].forEach != forEach }, {
-  forEach: forEach
-});
-
-
-/***/ }),
-
 /***/ 9173:
 /***/ (function(__unused_webpack_module, __unused_webpack_exports, __webpack_require__) {
 
@@ -36562,35 +35056,6 @@ var INCORRECT_ITERATION = !checkCorrectnessOfIteration(function (iterable) {
 // https://tc39.es/ecma262/#sec-array.from
 $({ target: 'Array', stat: true, forced: INCORRECT_ITERATION }, {
   from: from
-});
-
-
-/***/ }),
-
-/***/ 2276:
-/***/ (function(__unused_webpack_module, __unused_webpack_exports, __webpack_require__) {
-
-"use strict";
-
-/* eslint-disable es/no-array-prototype-indexof -- required for testing */
-var $ = __webpack_require__(3085);
-var $indexOf = __webpack_require__(8180).indexOf;
-var arrayMethodIsStrict = __webpack_require__(424);
-
-var nativeIndexOf = [].indexOf;
-
-var NEGATIVE_ZERO = !!nativeIndexOf && 1 / [1].indexOf(1, -0) < 0;
-var STRICT_METHOD = arrayMethodIsStrict('indexOf');
-
-// `Array.prototype.indexOf` method
-// https://tc39.es/ecma262/#sec-array.prototype.indexof
-$({ target: 'Array', proto: true, forced: NEGATIVE_ZERO || !STRICT_METHOD }, {
-  indexOf: function indexOf(searchElement /* , fromIndex = 0 */) {
-    return NEGATIVE_ZERO
-      // convert -0 to +0
-      ? nativeIndexOf.apply(this, arguments) || 0
-      : $indexOf(this, searchElement, arguments.length > 1 ? arguments[1] : undefined);
-  }
 });
 
 
@@ -36827,21 +35292,6 @@ $({ target: 'Array', proto: true, forced: !HAS_SPECIES_SUPPORT }, {
 
 /***/ }),
 
-/***/ 665:
-/***/ (function(__unused_webpack_module, __unused_webpack_exports, __webpack_require__) {
-
-var $ = __webpack_require__(3085);
-var bind = __webpack_require__(6782);
-
-// `Function.prototype.bind` method
-// https://tc39.es/ecma262/#sec-function.prototype.bind
-$({ target: 'Function', proto: true }, {
-  bind: bind
-});
-
-
-/***/ }),
-
 /***/ 8671:
 /***/ (function(__unused_webpack_module, __unused_webpack_exports, __webpack_require__) {
 
@@ -36974,36 +35424,6 @@ $({ target: 'Object', stat: true }, {
 /***/ (function() {
 
 // empty
-
-
-/***/ }),
-
-/***/ 4859:
-/***/ (function(__unused_webpack_module, __unused_webpack_exports, __webpack_require__) {
-
-var $ = __webpack_require__(3085);
-var $parseFloat = __webpack_require__(15);
-
-// `parseFloat` method
-// https://tc39.es/ecma262/#sec-parsefloat-string
-$({ global: true, forced: parseFloat != $parseFloat }, {
-  parseFloat: $parseFloat
-});
-
-
-/***/ }),
-
-/***/ 5706:
-/***/ (function(__unused_webpack_module, __unused_webpack_exports, __webpack_require__) {
-
-var $ = __webpack_require__(3085);
-var $parseInt = __webpack_require__(2558);
-
-// `parseInt` method
-// https://tc39.es/ecma262/#sec-parseint-string-radix
-$({ global: true, forced: parseInt != $parseInt }, {
-  parseInt: $parseInt
-});
 
 
 /***/ }),
@@ -38274,42 +36694,6 @@ for (var COLLECTION_NAME in DOMIterables) {
   }
   Iterators[COLLECTION_NAME] = Iterators.Array;
 }
-
-
-/***/ }),
-
-/***/ 2906:
-/***/ (function(__unused_webpack_module, __unused_webpack_exports, __webpack_require__) {
-
-var $ = __webpack_require__(3085);
-var global = __webpack_require__(8576);
-var isCallable = __webpack_require__(6447);
-var userAgent = __webpack_require__(8989);
-
-var slice = [].slice;
-var MSIE = /MSIE .\./.test(userAgent); // <- dirty ie9- check
-
-var wrap = function (scheduler) {
-  return function (handler, timeout /* , ...arguments */) {
-    var boundArgs = arguments.length > 2;
-    var args = boundArgs ? slice.call(arguments, 2) : undefined;
-    return scheduler(boundArgs ? function () {
-      // eslint-disable-next-line no-new-func -- spec requirement
-      (isCallable(handler) ? handler : Function(handler)).apply(this, args);
-    } : handler, timeout);
-  };
-};
-
-// ie9- setTimeout & setInterval additional parameters fix
-// https://html.spec.whatwg.org/multipage/timers-and-user-prompts.html#timers
-$({ global: true, bind: true, forced: MSIE }, {
-  // `setTimeout` method
-  // https://html.spec.whatwg.org/multipage/timers-and-user-prompts.html#dom-settimeout
-  setTimeout: wrap(global.setTimeout),
-  // `setInterval` method
-  // https://html.spec.whatwg.org/multipage/timers-and-user-prompts.html#dom-setinterval
-  setInterval: wrap(global.setInterval)
-});
 
 
 /***/ }),
@@ -39733,31 +38117,11 @@ module.exports = parent;
 
 /***/ }),
 
-/***/ 6899:
-/***/ (function(module, __unused_webpack_exports, __webpack_require__) {
-
-var parent = __webpack_require__(98);
-
-module.exports = parent;
-
-
-/***/ }),
-
 /***/ 7710:
 /***/ (function(module, __unused_webpack_exports, __webpack_require__) {
 
 var parent = __webpack_require__(5739);
 __webpack_require__(162);
-
-module.exports = parent;
-
-
-/***/ }),
-
-/***/ 4486:
-/***/ (function(module, __unused_webpack_exports, __webpack_require__) {
-
-var parent = __webpack_require__(278);
 
 module.exports = parent;
 
@@ -39788,39 +38152,6 @@ module.exports = parent;
 /***/ (function(module, __unused_webpack_exports, __webpack_require__) {
 
 var parent = __webpack_require__(3669);
-
-module.exports = parent;
-
-
-/***/ }),
-
-/***/ 1206:
-/***/ (function(module, __unused_webpack_exports, __webpack_require__) {
-
-__webpack_require__(162);
-var forEach = __webpack_require__(6899);
-var classof = __webpack_require__(4696);
-var ArrayPrototype = Array.prototype;
-
-var DOMIterables = {
-  DOMTokenList: true,
-  NodeList: true
-};
-
-module.exports = function (it) {
-  var own = it.forEach;
-  return it === ArrayPrototype || (it instanceof Array && own === ArrayPrototype.forEach)
-    // eslint-disable-next-line no-prototype-builtins -- safe
-    || DOMIterables.hasOwnProperty(classof(it)) ? forEach : own;
-};
-
-
-/***/ }),
-
-/***/ 6174:
-/***/ (function(module, __unused_webpack_exports, __webpack_require__) {
-
-var parent = __webpack_require__(2604);
 
 module.exports = parent;
 
@@ -39927,26 +38258,6 @@ module.exports = parent;
 
 /***/ }),
 
-/***/ 5059:
-/***/ (function(module, __unused_webpack_exports, __webpack_require__) {
-
-var parent = __webpack_require__(2987);
-
-module.exports = parent;
-
-
-/***/ }),
-
-/***/ 3969:
-/***/ (function(module, __unused_webpack_exports, __webpack_require__) {
-
-var parent = __webpack_require__(2239);
-
-module.exports = parent;
-
-
-/***/ }),
-
 /***/ 6618:
 /***/ (function(module, __unused_webpack_exports, __webpack_require__) {
 
@@ -39964,17 +38275,6 @@ module.exports = parent;
 var parent = __webpack_require__(6577);
 
 module.exports = parent;
-
-
-/***/ }),
-
-/***/ 9562:
-/***/ (function(module, __unused_webpack_exports, __webpack_require__) {
-
-__webpack_require__(2906);
-var path = __webpack_require__(7545);
-
-module.exports = path.setTimeout;
 
 
 /***/ }),
@@ -40020,6 +38320,1288 @@ __webpack_require__(9336);
 var path = __webpack_require__(7545);
 
 module.exports = path.URL;
+
+
+/***/ }),
+
+/***/ 7928:
+/***/ (function(module, __unused_webpack_exports, __webpack_require__) {
+
+"use strict";
+/* eslint-disable complexity */
+/**
+ * @fileoverview Returns the first index at which a given element can be found in the array.
+ * @author NHN FE Development Lab <dl_javascript@nhn.com>
+ */
+
+
+
+var isArray = __webpack_require__(7322);
+
+/**
+ * @module array
+ */
+
+/**
+ * Returns the first index at which a given element can be found in the array
+ * from start index(default 0), or -1 if it is not present.
+ * It compares searchElement to elements of the Array using strict equality
+ * (the same method used by the ===, or triple-equals, operator).
+ * @param {*} searchElement Element to locate in the array
+ * @param {Array} array Array that will be traversed.
+ * @param {number} startIndex Start index in array for searching (default 0)
+ * @returns {number} the First index at which a given element, or -1 if it is not present
+ * @memberof module:array
+ * @example
+ * // ES6
+ * import inArray from 'tui-code-snippet/array/inArray';
+ * 
+ * // CommonJS
+ * const inArray = require('tui-code-snippet/array/inArray');
+ *
+ * const arr = ['one', 'two', 'three', 'four'];
+ * const idx1 = inArray('one', arr, 3); // -1
+ * const idx2 = inArray('one', arr); // 0
+ */
+function inArray(searchElement, array, startIndex) {
+  var i;
+  var length;
+  startIndex = startIndex || 0;
+
+  if (!isArray(array)) {
+    return -1;
+  }
+
+  if (Array.prototype.indexOf) {
+    return Array.prototype.indexOf.call(array, searchElement, startIndex);
+  }
+
+  length = array.length;
+  for (i = startIndex; startIndex >= 0 && i < length; i += 1) {
+    if (array[i] === searchElement) {
+      return i;
+    }
+  }
+
+  return -1;
+}
+
+module.exports = inArray;
+
+
+/***/ }),
+
+/***/ 1690:
+/***/ (function(module, __unused_webpack_exports, __webpack_require__) {
+
+"use strict";
+/**
+ * @fileoverview Execute the provided callback once for each property of object(or element of array) which actually exist.
+ * @author NHN FE Development Lab <dl_javascript@nhn.com>
+ */
+
+
+
+var isArray = __webpack_require__(7322);
+var forEachArray = __webpack_require__(893);
+var forEachOwnProperties = __webpack_require__(6956);
+
+/**
+ * @module collection
+ */
+
+/**
+ * Execute the provided callback once for each property of object(or element of array) which actually exist.
+ * If the object is Array-like object(ex-arguments object), It needs to transform to Array.(see 'ex2' of example).
+ * If the callback function returns false, the loop will be stopped.
+ * Callback function(iteratee) is invoked with three arguments:
+ *  1) The value of the property(or The value of the element)
+ *  2) The name of the property(or The index of the element)
+ *  3) The object being traversed
+ * @param {Object} obj The object that will be traversed
+ * @param {function} iteratee Callback function
+ * @param {Object} [context] Context(this) of callback function
+ * @memberof module:collection
+ * @example
+ * // ES6
+ * import forEach from 'tui-code-snippet/collection/forEach'; 
+ * 
+ * // CommonJS
+ * const forEach = require('tui-code-snippet/collection/forEach'); 
+ *
+ * let sum = 0;
+ *
+ * forEach([1,2,3], function(value){
+ *   sum += value;
+ * });
+ * alert(sum); // 6
+ *
+ * // In case of Array-like object
+ * const array = Array.prototype.slice.call(arrayLike); // change to array
+ * forEach(array, function(value){
+ *   sum += value;
+ * });
+ */
+function forEach(obj, iteratee, context) {
+  if (isArray(obj)) {
+    forEachArray(obj, iteratee, context);
+  } else {
+    forEachOwnProperties(obj, iteratee, context);
+  }
+}
+
+module.exports = forEach;
+
+
+/***/ }),
+
+/***/ 893:
+/***/ (function(module) {
+
+"use strict";
+/**
+ * @fileoverview Execute the provided callback once for each element present in the array(or Array-like object) in ascending order.
+ * @author NHN FE Development Lab <dl_javascript@nhn.com>
+ */
+
+
+
+/**
+ * Execute the provided callback once for each element present
+ * in the array(or Array-like object) in ascending order.
+ * If the callback function returns false, the loop will be stopped.
+ * Callback function(iteratee) is invoked with three arguments:
+ *  1) The value of the element
+ *  2) The index of the element
+ *  3) The array(or Array-like object) being traversed
+ * @param {Array|Arguments|NodeList} arr The array(or Array-like object) that will be traversed
+ * @param {function} iteratee Callback function
+ * @param {Object} [context] Context(this) of callback function
+ * @memberof module:collection
+ * @example
+ * // ES6
+ * import forEachArray from 'tui-code-snippet/collection/forEachArray';
+ * 
+ * // CommonJS
+ * const forEachArray = require('tui-code-snippet/collection/forEachArray'); 
+ *
+ * let sum = 0;
+ *
+ * forEachArray([1,2,3], function(value){
+ *   sum += value;
+ * });
+ * alert(sum); // 6
+ */
+function forEachArray(arr, iteratee, context) {
+  var index = 0;
+  var len = arr.length;
+
+  context = context || null;
+
+  for (; index < len; index += 1) {
+    if (iteratee.call(context, arr[index], index, arr) === false) {
+      break;
+    }
+  }
+}
+
+module.exports = forEachArray;
+
+
+/***/ }),
+
+/***/ 6956:
+/***/ (function(module) {
+
+"use strict";
+/**
+ * @fileoverview Execute the provided callback once for each property of object which actually exist.
+ * @author NHN FE Development Lab <dl_javascript@nhn.com>
+ */
+
+
+
+/**
+ * Execute the provided callback once for each property of object which actually exist.
+ * If the callback function returns false, the loop will be stopped.
+ * Callback function(iteratee) is invoked with three arguments:
+ *  1) The value of the property
+ *  2) The name of the property
+ *  3) The object being traversed
+ * @param {Object} obj The object that will be traversed
+ * @param {function} iteratee  Callback function
+ * @param {Object} [context] Context(this) of callback function
+ * @memberof module:collection
+ * @example
+ * // ES6
+ * import forEachOwnProperties from 'tui-code-snippet/collection/forEachOwnProperties';
+ * 
+ * // CommonJS
+ * const forEachOwnProperties = require('tui-code-snippet/collection/forEachOwnProperties'); 
+ *
+ * let sum = 0;
+ *
+ * forEachOwnProperties({a:1,b:2,c:3}, function(value){
+ *   sum += value;
+ * });
+ * alert(sum); // 6
+ */
+function forEachOwnProperties(obj, iteratee, context) {
+  var key;
+
+  context = context || null;
+
+  for (key in obj) {
+    if (obj.hasOwnProperty(key)) {
+      if (iteratee.call(context, obj[key], key, obj) === false) {
+        break;
+      }
+    }
+  }
+}
+
+module.exports = forEachOwnProperties;
+
+
+/***/ }),
+
+/***/ 2278:
+/***/ (function(module, __unused_webpack_exports, __webpack_require__) {
+
+"use strict";
+/**
+ * @fileoverview This module provides some functions for custom events. And it is implemented in the observer design pattern.
+ * @author NHN FE Development Lab <dl_javascript@nhn.com>
+ */
+
+
+
+var extend = __webpack_require__(7969);
+var isExisty = __webpack_require__(7065);
+var isString = __webpack_require__(758);
+var isObject = __webpack_require__(5758);
+var isArray = __webpack_require__(7322);
+var isFunction = __webpack_require__(4294);
+var forEach = __webpack_require__(1690);
+
+var R_EVENTNAME_SPLIT = /\s+/g;
+
+/**
+ * @class
+ * @example
+ * // ES6
+ * import CustomEvents from 'tui-code-snippet/customEvents/customEvents';
+ * 
+ * // CommonJS
+ * const CustomEvents = require('tui-code-snippet/customEvents/customEvents'); 
+ */
+function CustomEvents() {
+  /**
+     * @type {HandlerItem[]}
+     */
+  this.events = null;
+
+  /**
+     * only for checking specific context event was binded
+     * @type {object[]}
+     */
+  this.contexts = null;
+}
+
+/**
+ * Mixin custom events feature to specific constructor
+ * @param {function} func - constructor
+ * @example
+ * //ES6
+ * import CustomEvents from 'tui-code-snippet/customEvents/customEvents'; 
+ * 
+ * // CommonJS
+ * const CustomEvents = require('tui-code-snippet/customEvents/customEvents'); 
+ *
+ * function Model() {
+ *     this.name = '';
+ * }
+ * CustomEvents.mixin(Model);
+ *
+ * const model = new Model();
+ * model.on('change', function() { this.name = 'model'; }, this);
+ * model.fire('change');
+ * alert(model.name); // 'model';
+ */
+CustomEvents.mixin = function(func) {
+  extend(func.prototype, CustomEvents.prototype);
+};
+
+/**
+ * Get HandlerItem object
+ * @param {function} handler - handler function
+ * @param {object} [context] - context for handler
+ * @returns {HandlerItem} HandlerItem object
+ * @private
+ */
+CustomEvents.prototype._getHandlerItem = function(handler, context) {
+  var item = {handler: handler};
+
+  if (context) {
+    item.context = context;
+  }
+
+  return item;
+};
+
+/**
+ * Get event object safely
+ * @param {string} [eventName] - create sub event map if not exist.
+ * @returns {(object|array)} event object. if you supplied `eventName`
+ *  parameter then make new array and return it
+ * @private
+ */
+CustomEvents.prototype._safeEvent = function(eventName) {
+  var events = this.events;
+  var byName;
+
+  if (!events) {
+    events = this.events = {};
+  }
+
+  if (eventName) {
+    byName = events[eventName];
+
+    if (!byName) {
+      byName = [];
+      events[eventName] = byName;
+    }
+
+    events = byName;
+  }
+
+  return events;
+};
+
+/**
+ * Get context array safely
+ * @returns {array} context array
+ * @private
+ */
+CustomEvents.prototype._safeContext = function() {
+  var context = this.contexts;
+
+  if (!context) {
+    context = this.contexts = [];
+  }
+
+  return context;
+};
+
+/**
+ * Get index of context
+ * @param {object} ctx - context that used for bind custom event
+ * @returns {number} index of context
+ * @private
+ */
+CustomEvents.prototype._indexOfContext = function(ctx) {
+  var context = this._safeContext();
+  var index = 0;
+
+  while (context[index]) {
+    if (ctx === context[index][0]) {
+      return index;
+    }
+
+    index += 1;
+  }
+
+  return -1;
+};
+
+/**
+ * Memorize supplied context for recognize supplied object is context or
+ *  name: handler pair object when off()
+ * @param {object} ctx - context object to memorize
+ * @private
+ */
+CustomEvents.prototype._memorizeContext = function(ctx) {
+  var context, index;
+
+  if (!isExisty(ctx)) {
+    return;
+  }
+
+  context = this._safeContext();
+  index = this._indexOfContext(ctx);
+
+  if (index > -1) {
+    context[index][1] += 1;
+  } else {
+    context.push([ctx, 1]);
+  }
+};
+
+/**
+ * Forget supplied context object
+ * @param {object} ctx - context object to forget
+ * @private
+ */
+CustomEvents.prototype._forgetContext = function(ctx) {
+  var context, contextIndex;
+
+  if (!isExisty(ctx)) {
+    return;
+  }
+
+  context = this._safeContext();
+  contextIndex = this._indexOfContext(ctx);
+
+  if (contextIndex > -1) {
+    context[contextIndex][1] -= 1;
+
+    if (context[contextIndex][1] <= 0) {
+      context.splice(contextIndex, 1);
+    }
+  }
+};
+
+/**
+ * Bind event handler
+ * @param {(string|{name:string, handler:function})} eventName - custom
+ *  event name or an object {eventName: handler}
+ * @param {(function|object)} [handler] - handler function or context
+ * @param {object} [context] - context for binding
+ * @private
+ */
+CustomEvents.prototype._bindEvent = function(eventName, handler, context) {
+  var events = this._safeEvent(eventName);
+  this._memorizeContext(context);
+  events.push(this._getHandlerItem(handler, context));
+};
+
+/**
+ * Bind event handlers
+ * @param {(string|{name:string, handler:function})} eventName - custom
+ *  event name or an object {eventName: handler}
+ * @param {(function|object)} [handler] - handler function or context
+ * @param {object} [context] - context for binding
+ * //-- #1. Get Module --//
+ * // ES6
+ * import CustomEvents from 'tui-code-snippet/customEvents/customEvents'; 
+ * 
+ * // CommonJS
+ * const CustomEvents = require('tui-code-snippet/customEvents/customEvents'); 
+ *
+ * //-- #2. Use method --//
+ * // # 2.1 Basic Usage
+ * CustomEvents.on('onload', handler);
+ *
+ * // # 2.2 With context
+ * CustomEvents.on('onload', handler, myObj);
+ *
+ * // # 2.3 Bind by object that name, handler pairs
+ * CustomEvents.on({
+ *     'play': handler,
+ *     'pause': handler2
+ * });
+ *
+ * // # 2.4 Bind by object that name, handler pairs with context object
+ * CustomEvents.on({
+ *     'play': handler
+ * }, myObj);
+ */
+CustomEvents.prototype.on = function(eventName, handler, context) {
+  var self = this;
+
+  if (isString(eventName)) {
+    // [syntax 1, 2]
+    eventName = eventName.split(R_EVENTNAME_SPLIT);
+    forEach(eventName, function(name) {
+      self._bindEvent(name, handler, context);
+    });
+  } else if (isObject(eventName)) {
+    // [syntax 3, 4]
+    context = handler;
+    forEach(eventName, function(func, name) {
+      self.on(name, func, context);
+    });
+  }
+};
+
+/**
+ * Bind one-shot event handlers
+ * @param {(string|{name:string,handler:function})} eventName - custom
+ *  event name or an object {eventName: handler}
+ * @param {function|object} [handler] - handler function or context
+ * @param {object} [context] - context for binding
+ */
+CustomEvents.prototype.once = function(eventName, handler, context) {
+  var self = this;
+
+  if (isObject(eventName)) {
+    context = handler;
+    forEach(eventName, function(func, name) {
+      self.once(name, func, context);
+    });
+
+    return;
+  }
+
+  function onceHandler() { // eslint-disable-line require-jsdoc
+    handler.apply(context, arguments);
+    self.off(eventName, onceHandler, context);
+  }
+
+  this.on(eventName, onceHandler, context);
+};
+
+/**
+ * Splice supplied array by callback result
+ * @param {array} arr - array to splice
+ * @param {function} predicate - function return boolean
+ * @private
+ */
+CustomEvents.prototype._spliceMatches = function(arr, predicate) {
+  var i = 0;
+  var len;
+
+  if (!isArray(arr)) {
+    return;
+  }
+
+  for (len = arr.length; i < len; i += 1) {
+    if (predicate(arr[i]) === true) {
+      arr.splice(i, 1);
+      len -= 1;
+      i -= 1;
+    }
+  }
+};
+
+/**
+ * Get matcher for unbind specific handler events
+ * @param {function} handler - handler function
+ * @returns {function} handler matcher
+ * @private
+ */
+CustomEvents.prototype._matchHandler = function(handler) {
+  var self = this;
+
+  return function(item) {
+    var needRemove = handler === item.handler;
+
+    if (needRemove) {
+      self._forgetContext(item.context);
+    }
+
+    return needRemove;
+  };
+};
+
+/**
+ * Get matcher for unbind specific context events
+ * @param {object} context - context
+ * @returns {function} object matcher
+ * @private
+ */
+CustomEvents.prototype._matchContext = function(context) {
+  var self = this;
+
+  return function(item) {
+    var needRemove = context === item.context;
+
+    if (needRemove) {
+      self._forgetContext(item.context);
+    }
+
+    return needRemove;
+  };
+};
+
+/**
+ * Get matcher for unbind specific hander, context pair events
+ * @param {function} handler - handler function
+ * @param {object} context - context
+ * @returns {function} handler, context matcher
+ * @private
+ */
+CustomEvents.prototype._matchHandlerAndContext = function(handler, context) {
+  var self = this;
+
+  return function(item) {
+    var matchHandler = (handler === item.handler);
+    var matchContext = (context === item.context);
+    var needRemove = (matchHandler && matchContext);
+
+    if (needRemove) {
+      self._forgetContext(item.context);
+    }
+
+    return needRemove;
+  };
+};
+
+/**
+ * Unbind event by event name
+ * @param {string} eventName - custom event name to unbind
+ * @param {function} [handler] - handler function
+ * @private
+ */
+CustomEvents.prototype._offByEventName = function(eventName, handler) {
+  var self = this;
+  var andByHandler = isFunction(handler);
+  var matchHandler = self._matchHandler(handler);
+
+  eventName = eventName.split(R_EVENTNAME_SPLIT);
+
+  forEach(eventName, function(name) {
+    var handlerItems = self._safeEvent(name);
+
+    if (andByHandler) {
+      self._spliceMatches(handlerItems, matchHandler);
+    } else {
+      forEach(handlerItems, function(item) {
+        self._forgetContext(item.context);
+      });
+
+      self.events[name] = [];
+    }
+  });
+};
+
+/**
+ * Unbind event by handler function
+ * @param {function} handler - handler function
+ * @private
+ */
+CustomEvents.prototype._offByHandler = function(handler) {
+  var self = this;
+  var matchHandler = this._matchHandler(handler);
+
+  forEach(this._safeEvent(), function(handlerItems) {
+    self._spliceMatches(handlerItems, matchHandler);
+  });
+};
+
+/**
+ * Unbind event by object(name: handler pair object or context object)
+ * @param {object} obj - context or {name: handler} pair object
+ * @param {function} handler - handler function
+ * @private
+ */
+CustomEvents.prototype._offByObject = function(obj, handler) {
+  var self = this;
+  var matchFunc;
+
+  if (this._indexOfContext(obj) < 0) {
+    forEach(obj, function(func, name) {
+      self.off(name, func);
+    });
+  } else if (isString(handler)) {
+    matchFunc = this._matchContext(obj);
+
+    self._spliceMatches(this._safeEvent(handler), matchFunc);
+  } else if (isFunction(handler)) {
+    matchFunc = this._matchHandlerAndContext(handler, obj);
+
+    forEach(this._safeEvent(), function(handlerItems) {
+      self._spliceMatches(handlerItems, matchFunc);
+    });
+  } else {
+    matchFunc = this._matchContext(obj);
+
+    forEach(this._safeEvent(), function(handlerItems) {
+      self._spliceMatches(handlerItems, matchFunc);
+    });
+  }
+};
+
+/**
+ * Unbind custom events
+ * @param {(string|object|function)} eventName - event name or context or
+ *  {name: handler} pair object or handler function
+ * @param {(function)} handler - handler function
+ * @example
+ * //-- #1. Get Module --//
+ * // ES6
+ * import CustomEvents from 'tui-code-snippet/customEvents/customEvents'; 
+ * 
+ * // CommonJS
+ * const CustomEvents = require('tui-code-snippet/customEvents/customEvents'); 
+ *
+ * //-- #2. Use method --//
+ * // # 2.1 off by event name
+ * CustomEvents.off('onload');
+ *
+ * // # 2.2 off by event name and handler
+ * CustomEvents.off('play', handler);
+ *
+ * // # 2.3 off by handler
+ * CustomEvents.off(handler);
+ *
+ * // # 2.4 off by context
+ * CustomEvents.off(myObj);
+ *
+ * // # 2.5 off by context and handler
+ * CustomEvents.off(myObj, handler);
+ *
+ * // # 2.6 off by context and event name
+ * CustomEvents.off(myObj, 'onload');
+ *
+ * // # 2.7 off by an Object.<string, function> that is {eventName: handler}
+ * CustomEvents.off({
+ *   'play': handler,
+ *   'pause': handler2
+ * });
+ *
+ * // # 2.8 off the all events
+ * CustomEvents.off();
+ */
+CustomEvents.prototype.off = function(eventName, handler) {
+  if (isString(eventName)) {
+    // [syntax 1, 2]
+    this._offByEventName(eventName, handler);
+  } else if (!arguments.length) {
+    // [syntax 8]
+    this.events = {};
+    this.contexts = [];
+  } else if (isFunction(eventName)) {
+    // [syntax 3]
+    this._offByHandler(eventName);
+  } else if (isObject(eventName)) {
+    // [syntax 4, 5, 6]
+    this._offByObject(eventName, handler);
+  }
+};
+
+/**
+ * Fire custom event
+ * @param {string} eventName - name of custom event
+ */
+CustomEvents.prototype.fire = function(eventName) {  // eslint-disable-line
+  this.invoke.apply(this, arguments);
+};
+
+/**
+ * Fire a event and returns the result of operation 'boolean AND' with all
+ *  listener's results.
+ *
+ * So, It is different from {@link CustomEvents#fire}.
+ *
+ * In service code, use this as a before event in component level usually
+ *  for notifying that the event is cancelable.
+ * @param {string} eventName - Custom event name
+ * @param {...*} data - Data for event
+ * @returns {boolean} The result of operation 'boolean AND'
+ * @example
+ * const map = new Map();
+ * map.on({
+ *   'beforeZoom': function() {
+ *     // It should cancel the 'zoom' event by some conditions.
+ *     if (that.disabled && this.getState()) {
+ *       return false;
+ *     }
+ *     return true;
+ *   }
+ * });
+ *
+ * if (this.invoke('beforeZoom')) {    // check the result of 'beforeZoom'
+ *   // if true,
+ *   // doSomething
+ * }
+ */
+CustomEvents.prototype.invoke = function(eventName) {
+  var events, args, index, item;
+
+  if (!this.hasListener(eventName)) {
+    return true;
+  }
+
+  events = this._safeEvent(eventName);
+  args = Array.prototype.slice.call(arguments, 1);
+  index = 0;
+
+  while (events[index]) {
+    item = events[index];
+
+    if (item.handler.apply(item.context, args) === false) {
+      return false;
+    }
+
+    index += 1;
+  }
+
+  return true;
+};
+
+/**
+ * Return whether at least one of the handlers is registered in the given
+ *  event name.
+ * @param {string} eventName - Custom event name
+ * @returns {boolean} Is there at least one handler in event name?
+ */
+CustomEvents.prototype.hasListener = function(eventName) {
+  return this.getListenerLength(eventName) > 0;
+};
+
+/**
+ * Return a count of events registered.
+ * @param {string} eventName - Custom event name
+ * @returns {number} number of event
+ */
+CustomEvents.prototype.getListenerLength = function(eventName) {
+  var events = this._safeEvent(eventName);
+
+  return events.length;
+};
+
+module.exports = CustomEvents;
+
+
+/***/ }),
+
+/***/ 7969:
+/***/ (function(module) {
+
+"use strict";
+/**
+ * @fileoverview Extend the target object from other objects.
+ * @author NHN FE Development Lab <dl_javascript@nhn.com>
+ */
+
+
+
+/**
+ * @module object
+ */
+
+/**
+ * Extend the target object from other objects.
+ * @param {object} target - Object that will be extended
+ * @param {...object} objects - Objects as sources
+ * @returns {object} Extended object
+ * @memberof module:object
+ */
+function extend(target, objects) { // eslint-disable-line no-unused-vars
+  var hasOwnProp = Object.prototype.hasOwnProperty;
+  var source, prop, i, len;
+
+  for (i = 1, len = arguments.length; i < len; i += 1) {
+    source = arguments[i];
+    for (prop in source) {
+      if (hasOwnProp.call(source, prop)) {
+        target[prop] = source[prop];
+      }
+    }
+  }
+
+  return target;
+}
+
+module.exports = extend;
+
+
+/***/ }),
+
+/***/ 6004:
+/***/ (function(module, __unused_webpack_exports, __webpack_require__) {
+
+"use strict";
+/**
+ * @fileoverview Retrieve a nested item from the given object/array.
+ * @author NHN FE Development Lab <dl_javascript@nhn.com>
+ */
+
+
+
+var isUndefined = __webpack_require__(3929);
+var isNull = __webpack_require__(2934);
+
+/**
+ * Retrieve a nested item from the given object/array.
+ * @param {object|Array} obj - Object for retrieving
+ * @param {...string|number} paths - Paths of property
+ * @returns {*} Value
+ * @memberof module:object
+ * @example
+ * // ES6
+ * import pick from 'tui-code-snippet/object/pick';
+ * 
+ * // CommonJS
+ * const pick = require('tui-code-snippet/object/pick');
+ *
+ * cosnt obj = {
+ *   'key1': 1,
+ *   'nested' : {
+ *     'key1': 11,
+ *     'nested': {
+ *       'key1': 21
+ *     }
+ *   }
+ * };
+ * pick(obj, 'nested', 'nested', 'key1'); // 21
+ * pick(obj, 'nested', 'nested', 'key2'); // undefined
+ *
+ * const arr = ['a', 'b', 'c'];
+ * pick(arr, 1); // 'b'
+ */
+function pick(obj, paths) { // eslint-disable-line no-unused-vars
+  var args = arguments;
+  var target = args[0];
+  var i = 1;
+  var length = args.length;
+
+  for (; i < length; i += 1) {
+    if (isUndefined(target) ||
+            isNull(target)) {
+      return;
+    }
+
+    target = target[args[i]];
+  }
+
+  return target; // eslint-disable-line consistent-return
+}
+
+module.exports = pick;
+
+
+/***/ }),
+
+/***/ 4254:
+/***/ (function(module, __unused_webpack_exports, __webpack_require__) {
+
+"use strict";
+/**
+ * @fileoverview Request image ping.
+ * @author NHN FE Development Lab <dl_javascript@nhn.com>
+ */
+
+
+
+var forEachOwnProperties = __webpack_require__(6956);
+
+/**
+ * @module request
+ */
+
+/**
+ * Request image ping.
+ * @param {String} url url for ping request
+ * @param {Object} trackingInfo infos for make query string
+ * @returns {HTMLElement}
+ * @memberof module:request
+ * @example
+ * // ES6
+ * import imagePing from 'tui-code-snippet/request/imagePing';
+ * 
+ * // CommonJS
+ * const imagePing = require('tui-code-snippet/request/imagePing');
+ *
+ * imagePing('https://www.google-analytics.com/collect', {
+ *   v: 1,
+ *   t: 'event',
+ *   tid: 'trackingid',
+ *   cid: 'cid',
+ *   dp: 'dp',
+ *   dh: 'dh'
+ * });
+ */
+function imagePing(url, trackingInfo) {
+  var trackingElement = document.createElement('img');
+  var queryString = '';
+  forEachOwnProperties(trackingInfo, function(value, key) {
+    queryString += '&' + key + '=' + value;
+  });
+  queryString = queryString.substring(1);
+
+  trackingElement.src = url + '?' + queryString;
+
+  trackingElement.style.display = 'none';
+  document.body.appendChild(trackingElement);
+  document.body.removeChild(trackingElement);
+
+  return trackingElement;
+}
+
+module.exports = imagePing;
+
+
+/***/ }),
+
+/***/ 1391:
+/***/ (function(module, __unused_webpack_exports, __webpack_require__) {
+
+"use strict";
+/**
+ * @fileoverview Send hostname on DOMContentLoaded.
+ * @author NHN FE Development Lab <dl_javascript@nhn.com>
+ */
+
+
+
+var isUndefined = __webpack_require__(3929);
+var imagePing = __webpack_require__(4254);
+
+var ms7days = 7 * 24 * 60 * 60 * 1000;
+
+/**
+ * Check if the date has passed 7 days
+ * @param {number} date - milliseconds
+ * @returns {boolean}
+ * @private
+ */
+function isExpired(date) {
+  var now = new Date().getTime();
+
+  return now - date > ms7days;
+}
+
+/**
+ * Send hostname on DOMContentLoaded.
+ * To prevent hostname set tui.usageStatistics to false.
+ * @param {string} appName - application name
+ * @param {string} trackingId - GA tracking ID
+ * @ignore
+ */
+function sendHostname(appName, trackingId) {
+  var url = 'https://www.google-analytics.com/collect';
+  var hostname = location.hostname;
+  var hitType = 'event';
+  var eventCategory = 'use';
+  var applicationKeyForStorage = 'TOAST UI ' + appName + ' for ' + hostname + ': Statistics';
+  var date = window.localStorage.getItem(applicationKeyForStorage);
+
+  // skip if the flag is defined and is set to false explicitly
+  if (!isUndefined(window.tui) && window.tui.usageStatistics === false) {
+    return;
+  }
+
+  // skip if not pass seven days old
+  if (date && !isExpired(date)) {
+    return;
+  }
+
+  window.localStorage.setItem(applicationKeyForStorage, new Date().getTime());
+
+  setTimeout(function() {
+    if (document.readyState === 'interactive' || document.readyState === 'complete') {
+      imagePing(url, {
+        v: 1,
+        t: hitType,
+        tid: trackingId,
+        cid: hostname,
+        dp: hostname,
+        dh: appName,
+        el: appName,
+        ec: eventCategory
+      });
+    }
+  }, 1000);
+}
+
+module.exports = sendHostname;
+
+
+/***/ }),
+
+/***/ 7322:
+/***/ (function(module) {
+
+"use strict";
+/**
+ * @fileoverview Check whether the given variable is an instance of Array or not.
+ * @author NHN FE Development Lab <dl_javascript@nhn.com>
+ */
+
+
+
+/**
+ * Check whether the given variable is an instance of Array or not.
+ * If the given variable is an instance of Array, return true.
+ * @param {*} obj - Target for checking
+ * @returns {boolean} Is array instance?
+ * @memberof module:type
+ */
+function isArray(obj) {
+  return obj instanceof Array;
+}
+
+module.exports = isArray;
+
+
+/***/ }),
+
+/***/ 7065:
+/***/ (function(module, __unused_webpack_exports, __webpack_require__) {
+
+"use strict";
+/**
+ * @fileoverview Check whether the given variable is existing or not.
+ * @author NHN FE Development Lab <dl_javascript@nhn.com>
+ */
+
+
+
+var isUndefined = __webpack_require__(3929);
+var isNull = __webpack_require__(2934);
+
+/**
+ * Check whether the given variable is existing or not.
+ * If the given variable is not null and not undefined, returns true.
+ * @param {*} param - Target for checking
+ * @returns {boolean} Is existy?
+ * @memberof module:type
+ * @example
+ * // ES6
+ * import isExisty from 'tui-code-snippet/type/isExisty');
+ * 
+ * // CommonJS
+ * const isExisty = require('tui-code-snippet/type/isExisty');
+ *
+ * isExisty(''); //true
+ * isExisty(0); //true
+ * isExisty([]); //true
+ * isExisty({}); //true
+ * isExisty(null); //false
+ * isExisty(undefined); //false
+*/
+function isExisty(param) {
+  return !isUndefined(param) && !isNull(param);
+}
+
+module.exports = isExisty;
+
+
+/***/ }),
+
+/***/ 4294:
+/***/ (function(module) {
+
+"use strict";
+/**
+ * @fileoverview Check whether the given variable is a function or not.
+ * @author NHN FE Development Lab <dl_javascript@nhn.com>
+ */
+
+
+
+/**
+ * Check whether the given variable is a function or not.
+ * If the given variable is a function, return true.
+ * @param {*} obj - Target for checking
+ * @returns {boolean} Is function?
+ * @memberof module:type
+ */
+function isFunction(obj) {
+  return obj instanceof Function;
+}
+
+module.exports = isFunction;
+
+
+/***/ }),
+
+/***/ 2934:
+/***/ (function(module) {
+
+"use strict";
+/**
+ * @fileoverview Check whether the given variable is null or not.
+ * @author NHN FE Development Lab <dl_javascript@nhn.com>
+ */
+
+
+
+/**
+ * Check whether the given variable is null or not.
+ * If the given variable(arguments[0]) is null, returns true.
+ * @param {*} obj - Target for checking
+ * @returns {boolean} Is null?
+ * @memberof module:type
+ */
+function isNull(obj) {
+  return obj === null;
+}
+
+module.exports = isNull;
+
+
+/***/ }),
+
+/***/ 5758:
+/***/ (function(module) {
+
+"use strict";
+/**
+ * @fileoverview Check whether the given variable is an object or not.
+ * @author NHN FE Development Lab <dl_javascript@nhn.com>
+ */
+
+
+
+/**
+ * Check whether the given variable is an object or not.
+ * If the given variable is an object, return true.
+ * @param {*} obj - Target for checking
+ * @returns {boolean} Is object?
+ * @memberof module:type
+ */
+function isObject(obj) {
+  return obj === Object(obj);
+}
+
+module.exports = isObject;
+
+
+/***/ }),
+
+/***/ 758:
+/***/ (function(module) {
+
+"use strict";
+/**
+ * @fileoverview Check whether the given variable is a string or not.
+ * @author NHN FE Development Lab <dl_javascript@nhn.com>
+ */
+
+
+
+/**
+ * Check whether the given variable is a string or not.
+ * If the given variable is a string, return true.
+ * @param {*} obj - Target for checking
+ * @returns {boolean} Is string?
+ * @memberof module:type
+ */
+function isString(obj) {
+  return typeof obj === 'string' || obj instanceof String;
+}
+
+module.exports = isString;
+
+
+/***/ }),
+
+/***/ 3929:
+/***/ (function(module) {
+
+"use strict";
+/**
+ * @fileoverview Check whether the given variable is undefined or not.
+ * @author NHN FE Development Lab <dl_javascript@nhn.com>
+ */
+
+
+
+/**
+ * Check whether the given variable is undefined or not.
+ * If the given variable is undefined, returns true.
+ * @param {*} obj - Target for checking
+ * @returns {boolean} Is undefined?
+ * @memberof module:type
+ */
+function isUndefined(obj) {
+  return obj === undefined; // eslint-disable-line no-undefined
+}
+
+module.exports = isUndefined;
 
 
 /***/ }),
@@ -40145,29 +39727,13 @@ __webpack_require__.d(__webpack_exports__, {
 // EXTERNAL MODULE: ../../node_modules/@babel/runtime-corejs3/core-js-stable/instance/trim.js
 var trim = __webpack_require__(9131);
 var trim_default = /*#__PURE__*/__webpack_require__.n(trim);
-// EXTERNAL MODULE: ../../node_modules/@babel/runtime-corejs3/core-js-stable/instance/index-of.js
-var index_of = __webpack_require__(1899);
-var index_of_default = /*#__PURE__*/__webpack_require__.n(index_of);
 // EXTERNAL MODULE: ../../node_modules/@babel/runtime-corejs3/core-js-stable/instance/splice.js
 var splice = __webpack_require__(6562);
 var splice_default = /*#__PURE__*/__webpack_require__.n(splice);
-// EXTERNAL MODULE: ../../node_modules/@babel/runtime-corejs3/core-js-stable/object/define-property.js
-var define_property = __webpack_require__(1734);
-var define_property_default = /*#__PURE__*/__webpack_require__.n(define_property);
 // EXTERNAL MODULE: ../../node_modules/@babel/runtime-corejs3/core-js-stable/instance/slice.js
 var slice = __webpack_require__(8005);
 var slice_default = /*#__PURE__*/__webpack_require__.n(slice);
-// EXTERNAL MODULE: ../../node_modules/@babel/runtime-corejs3/core-js-stable/object/create.js
-var create = __webpack_require__(6065);
-var create_default = /*#__PURE__*/__webpack_require__.n(create);
-// EXTERNAL MODULE: ../../node_modules/@babel/runtime-corejs3/core-js-stable/set-timeout.js
-var set_timeout = __webpack_require__(4496);
-var set_timeout_default = /*#__PURE__*/__webpack_require__.n(set_timeout);
 ;// CONCATENATED MODULE: ./src/js/polyfill.js
-
-
-
-
 
 
 
@@ -40220,7 +39786,7 @@ if ('document' in self) {
           strTrim = trim_default()(String[protoProp]) || function () {
         return this.replace(/^\s+|\s+$/g, '');
       },
-          arrIndexOf = index_of_default()(Array[protoProp]) || function (item) {
+          arrIndexOf = Array[protoProp].indexOf || function (item) {
         var i = 0,
             len = this.length;
 
@@ -40359,7 +39925,7 @@ if ('document' in self) {
         return this.join(' ');
       };
 
-      if ((define_property_default())) {
+      if (objCtr.defineProperty) {
         var classListPropDesc = {
           get: classListGetter,
           enumerable: true,
@@ -40367,15 +39933,14 @@ if ('document' in self) {
         };
 
         try {
-          define_property_default()(elemCtrProto, classListProp, classListPropDesc);
+          objCtr.defineProperty(elemCtrProto, classListProp, classListPropDesc);
         } catch (ex) {
           // IE 8 doesn't support enumerable:true
           // adding undefined to fight this issue https://github.com/eligrey/classList.js/issues/36
           // modernie IE8-MSW7 machine has IE8 8.0.6001.18702 and is affected
           if (ex.number === undefined || ex.number === -0x7ff5ec54) {
             classListPropDesc.enumerable = false;
-
-            define_property_default()(elemCtrProto, classListProp, classListPropDesc);
+            objCtr.defineProperty(elemCtrProto, classListProp, classListPropDesc);
           }
         }
       } else if (objCtr[protoProp].__defineGetter__) {
@@ -40431,7 +39996,7 @@ if ('document' in self) {
     if (!('replace' in document.createElement('_').classList)) {
       DOMTokenList.prototype.replace = function (token, replacement_token) {
         var tokens = this.toString().split(' '),
-            index = index_of_default()(tokens).call(tokens, token + '');
+            index = tokens.indexOf(token + '');
 
         if (~index) {
           tokens = slice_default()(tokens).call(tokens, index);
@@ -40461,15 +40026,14 @@ if ('document' in self) {
   'use strict';
 
   if (typeof window !== 'undefined' && window.addEventListener) {
-    var cache = create_default()(null); // holds xhr objects to prevent multiple requests
-
+    var cache = Object.create(null); // holds xhr objects to prevent multiple requests
 
     var checkUseElems;
     var tid; // timeout id
 
     var debouncedCheck = function debouncedCheck() {
       clearTimeout(tid);
-      tid = set_timeout_default()(checkUseElems, 100);
+      tid = setTimeout(checkUseElems, 100);
     };
 
     var unobserveChanges = function unobserveChanges() {
@@ -40657,7 +40221,7 @@ if ('document' in self) {
 
             if (xhr !== true) {
               // true signifies that prepending the SVG was not required
-              set_timeout_default()(attrUpdateFunc({
+              setTimeout(attrUpdateFunc({
                 useEl: uses[i],
                 base: base,
                 hash: hash
@@ -40692,7 +40256,7 @@ if ('document' in self) {
               cache[base] = true;
             }
           } else if (base.length && cache[base]) {
-            set_timeout_default()(attrUpdateFunc({
+            setTimeout(attrUpdateFunc({
               useEl: uses[i],
               base: base,
               hash: hash
@@ -40711,7 +40275,7 @@ if ('document' in self) {
     _winLoad = function winLoad() {
       window.removeEventListener('load', _winLoad, false); // to prevent memory leaks
 
-      tid = set_timeout_default()(checkUseElems, 0);
+      tid = setTimeout(checkUseElems, 0);
     };
 
     if (document.readyState !== 'complete') {
@@ -40785,12 +40349,12 @@ function _toConsumableArray(arr) {
   return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread();
 }
 // EXTERNAL MODULE: ../../node_modules/@babel/runtime-corejs3/core-js/object/define-property.js
-var object_define_property = __webpack_require__(7077);
+var define_property = __webpack_require__(7077);
 ;// CONCATENATED MODULE: ../../node_modules/@babel/runtime-corejs3/helpers/esm/defineProperty.js
 
 function _defineProperty(obj, key, value) {
   if (key in obj) {
-    object_define_property(obj, key, {
+    define_property(obj, key, {
       value: value,
       enumerable: true,
       configurable: true,
@@ -40818,7 +40382,7 @@ function _defineProperties(target, props) {
     descriptor.configurable = true;
     if ("value" in descriptor) descriptor.writable = true;
 
-    object_define_property(target, descriptor.key, descriptor);
+    define_property(target, descriptor.key, descriptor);
   }
 }
 
@@ -40827,9 +40391,6 @@ function _createClass(Constructor, protoProps, staticProps) {
   if (staticProps) _defineProperties(Constructor, staticProps);
   return Constructor;
 }
-// EXTERNAL MODULE: ../../node_modules/@babel/runtime-corejs3/core-js-stable/instance/bind.js
-var bind = __webpack_require__(4426);
-var bind_default = /*#__PURE__*/__webpack_require__.n(bind);
 // EXTERNAL MODULE: ../../node_modules/@babel/runtime-corejs3/core-js-stable/instance/concat.js
 var concat = __webpack_require__(9406);
 var concat_default = /*#__PURE__*/__webpack_require__.n(concat);
@@ -40841,20 +40402,20 @@ var url = __webpack_require__(3972);
 var url_default = /*#__PURE__*/__webpack_require__.n(url);
 // EXTERNAL MODULE: ./node_modules/fabric/dist/fabric.js
 var fabric = __webpack_require__(2777);
-// EXTERNAL MODULE: ./node_modules/tui-code-snippet/object/extend.js
-var extend = __webpack_require__(961);
+// EXTERNAL MODULE: ../../node_modules/tui-code-snippet/object/extend.js
+var extend = __webpack_require__(7969);
 var extend_default = /*#__PURE__*/__webpack_require__.n(extend);
-// EXTERNAL MODULE: ./node_modules/tui-code-snippet/type/isUndefined.js
-var type_isUndefined = __webpack_require__(5695);
+// EXTERNAL MODULE: ../../node_modules/tui-code-snippet/type/isUndefined.js
+var type_isUndefined = __webpack_require__(3929);
 var isUndefined_default = /*#__PURE__*/__webpack_require__.n(type_isUndefined);
-// EXTERNAL MODULE: ./node_modules/tui-code-snippet/collection/forEach.js
-var collection_forEach = __webpack_require__(8592);
+// EXTERNAL MODULE: ../../node_modules/tui-code-snippet/collection/forEach.js
+var collection_forEach = __webpack_require__(1690);
 var forEach_default = /*#__PURE__*/__webpack_require__.n(collection_forEach);
-// EXTERNAL MODULE: ./node_modules/tui-code-snippet/customEvents/customEvents.js
-var customEvents = __webpack_require__(9052);
+// EXTERNAL MODULE: ../../node_modules/tui-code-snippet/customEvents/customEvents.js
+var customEvents = __webpack_require__(2278);
 var customEvents_default = /*#__PURE__*/__webpack_require__.n(customEvents);
-// EXTERNAL MODULE: ./node_modules/tui-code-snippet/type/isString.js
-var isString = __webpack_require__(2560);
+// EXTERNAL MODULE: ../../node_modules/tui-code-snippet/type/isString.js
+var isString = __webpack_require__(758);
 var isString_default = /*#__PURE__*/__webpack_require__.n(isString);
 // EXTERNAL MODULE: ../../node_modules/@babel/runtime-corejs3/core-js-stable/object/keys.js
 var keys = __webpack_require__(2461);
@@ -40908,23 +40469,17 @@ function _nonIterableRest() {
 function _slicedToArray(arr, i) {
   return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest();
 }
-// EXTERNAL MODULE: ../../node_modules/@babel/runtime-corejs3/core-js-stable/parse-int.js
-var parse_int = __webpack_require__(6397);
-var parse_int_default = /*#__PURE__*/__webpack_require__.n(parse_int);
-// EXTERNAL MODULE: ../../node_modules/@babel/runtime-corejs3/core-js-stable/instance/for-each.js
-var for_each = __webpack_require__(7636);
-var for_each_default = /*#__PURE__*/__webpack_require__.n(for_each);
 // EXTERNAL MODULE: ../../node_modules/@babel/runtime-corejs3/core-js-stable/instance/fill.js
 var instance_fill = __webpack_require__(789);
 var fill_default = /*#__PURE__*/__webpack_require__.n(instance_fill);
-// EXTERNAL MODULE: ./node_modules/tui-code-snippet/request/sendHostname.js
-var sendHostname = __webpack_require__(4729);
+// EXTERNAL MODULE: ../../node_modules/tui-code-snippet/request/sendHostname.js
+var sendHostname = __webpack_require__(1391);
 var sendHostname_default = /*#__PURE__*/__webpack_require__.n(sendHostname);
-// EXTERNAL MODULE: ./node_modules/tui-code-snippet/object/pick.js
-var pick = __webpack_require__(1610);
+// EXTERNAL MODULE: ../../node_modules/tui-code-snippet/object/pick.js
+var pick = __webpack_require__(6004);
 var pick_default = /*#__PURE__*/__webpack_require__.n(pick);
-// EXTERNAL MODULE: ./node_modules/tui-code-snippet/array/inArray.js
-var inArray = __webpack_require__(3053);
+// EXTERNAL MODULE: ../../node_modules/tui-code-snippet/array/inArray.js
+var inArray = __webpack_require__(7928);
 var inArray_default = /*#__PURE__*/__webpack_require__.n(inArray);
 ;// CONCATENATED MODULE: ./src/js/consts.js
 var _context;
@@ -41322,9 +40877,6 @@ var defaultResizePixelValues = {
 
 
 
-
-
-
 var FLOATING_POINT_DIGIT = 2;
 var CSS_PREFIX = 'tui-image-editor-';
 var min = Math.min,
@@ -41425,7 +40977,7 @@ function getProperties(obj, keys) {
  */
 
 function toInteger(value) {
-  return parse_int_default()(value, 10);
+  return parseInt(value, 10);
 }
 /**
  * String to camelcase string
@@ -41464,12 +41016,9 @@ function getRgb(color, alpha) {
     color = concat_default()(_context2 = "".concat(color)).call(_context2, slice_default()(color).call(color, 1, 4));
   }
 
-  var r = parse_int_default()(slice_default()(color).call(color, 1, 3), 16);
-
-  var g = parse_int_default()(slice_default()(color).call(color, 3, 5), 16);
-
-  var b = parse_int_default()(slice_default()(color).call(color, 5, 7), 16);
-
+  var r = parseInt(slice_default()(color).call(color, 1, 3), 16);
+  var g = parseInt(slice_default()(color).call(color, 3, 5), 16);
+  var b = parseInt(slice_default()(color).call(color, 5, 7), 16);
   var a = alpha || 1;
   return concat_default()(_context3 = concat_default()(_context4 = concat_default()(_context5 = "rgba(".concat(r, ", ")).call(_context5, g, ", ")).call(_context4, b, ", ")).call(_context3, a, ")");
 }
@@ -41616,11 +41165,9 @@ function changeOrigin(fObject, origin) {
  */
 
 function flipObject(targetObject) {
-  var _context8;
-
   var result = {};
 
-  for_each_default()(_context8 = keys_default()(targetObject)).call(_context8, function (key) {
+  keys_default()(targetObject).forEach(function (key) {
     result[targetObject[key]] = key;
   });
 
@@ -41672,7 +41219,7 @@ function capitalizeString(targetString) {
  */
 
 function includes(targetArray, compareValue) {
-  return index_of_default()(targetArray).call(targetArray, compareValue) >= 0;
+  return targetArray.indexOf(compareValue) >= 0;
 }
 /**
  * Get fill type
@@ -41797,7 +41344,7 @@ function isSilentCommand(command) {
 // eslint-disable-next-line complexity, require-jsdoc
 
 function getHistoryTitle(command) {
-  var _context9, _context10;
+  var _context8, _context9;
 
   var FLIP_IMAGE = commandNames.FLIP_IMAGE,
       ROTATE_IMAGE = commandNames.ROTATE_IMAGE,
@@ -41821,7 +41368,7 @@ function getHistoryTitle(command) {
     case FLIP_IMAGE:
       historyInfo = {
         name: name,
-        detail: args[1] === 'reset' ? args[1] : slice_default()(_context9 = args[1]).call(_context9, 4)
+        detail: args[1] === 'reset' ? args[1] : slice_default()(_context8 = args[1]).call(_context8, 4)
       };
       break;
 
@@ -41897,7 +41444,7 @@ function getHistoryTitle(command) {
     case RESIZE_IMAGE:
       historyInfo = {
         name: historyNames.RESIZE,
-        detail: concat_default()(_context10 = "".concat(~~args[1].width, "x")).call(_context10, ~~args[1].height)
+        detail: concat_default()(_context9 = "".concat(~~args[1].width, "x")).call(_context9, ~~args[1].height)
       };
       break;
 
@@ -42175,7 +41722,7 @@ var commands = {};
  * @ignore
  */
 
-function command_create(name) {
+function create(name) {
   var actions = commands[name];
 
   if (actions) {
@@ -42203,7 +41750,7 @@ function register(command) {
 }
 
 /* harmony default export */ var factory_command = ({
-  create: command_create,
+  create: create,
   register: register
 });
 ;// CONCATENATED MODULE: ./src/js/invoker.js
@@ -42574,9 +42121,6 @@ var Invoker = /*#__PURE__*/function () {
 
 customEvents_default().mixin(Invoker);
 /* harmony default export */ var invoker = (Invoker);
-// EXTERNAL MODULE: ../../node_modules/@babel/runtime-corejs3/core-js-stable/parse-float.js
-var parse_float = __webpack_require__(5214);
-var parse_float_default = /*#__PURE__*/__webpack_require__.n(parse_float);
 ;// CONCATENATED MODULE: ./src/js/ui/template/mainContainer.js
 
 /* harmony default export */ var mainContainer = (function (_ref) {
@@ -42855,7 +42399,6 @@ var svg_default = __webpack_require__(2534);
 
 
 
-
 /**
  * Theme manager
  * @class
@@ -43017,13 +42560,13 @@ var Theme = /*#__PURE__*/function () {
 
       var converterStack = [];
       forEach_default()(styleObject, function (value, key) {
-        var _context, _context2;
+        var _context;
 
-        if (index_of_default()(_context = ['backgroundImage']).call(_context, key) > -1 && value !== 'none') {
+        if (['backgroundImage'].indexOf(key) > -1 && value !== 'none') {
           value = "url(".concat(value, ")");
         }
 
-        converterStack.push(concat_default()(_context2 = "".concat(_this._toUnderScore(key), ": ")).call(_context2, value));
+        converterStack.push(concat_default()(_context = "".concat(_this._toUnderScore(key), ": ")).call(_context, value));
       });
       return converterStack.join(';');
     }
@@ -43084,13 +42627,13 @@ var Theme = /*#__PURE__*/function () {
   }, {
     key: "_makeSvgIconPrefix",
     value: function _makeSvgIconPrefix(iconType, isSubmenu) {
-      var _context3;
+      var _context2;
 
       var iconStyleInfo = isSubmenu ? this.getStyle('submenu.icon') : this.getStyle('menu.icon');
       var _iconStyleInfo$iconTy2 = iconStyleInfo[iconType],
           path = _iconStyleInfo$iconTy2.path,
           name = _iconStyleInfo$iconTy2.name;
-      return path && name ? concat_default()(_context3 = "".concat(path, "#")).call(_context3, name, "-") : '#';
+      return path && name ? concat_default()(_context2 = "".concat(path, "#")).call(_context2, name, "-") : '#';
     }
     /**
      * Make svg use link path name
@@ -43107,7 +42650,7 @@ var Theme = /*#__PURE__*/function () {
       var _this2 = this;
 
       return map_default()(useIconTypes).call(useIconTypes, function (iconType) {
-        var _context4, _context5;
+        var _context3, _context4;
 
         var svgIconPrefix = _this2._makeSvgIconPrefix(iconType, isSubmenu);
 
@@ -43115,7 +42658,7 @@ var Theme = /*#__PURE__*/function () {
 
         var svgIconClassName = _this2._makeIconClassName(iconType, isSubmenu);
 
-        return concat_default()(_context4 = concat_default()(_context5 = "<use xlink:href=\"".concat(svgIconPrefix, "ic-")).call(_context5, iconName, "\" class=\"")).call(_context4, svgIconClassName, "\"/>");
+        return concat_default()(_context3 = concat_default()(_context4 = "<use xlink:href=\"".concat(svgIconPrefix, "ic-")).call(_context4, iconName, "\" class=\"")).call(_context3, svgIconClassName, "\"/>");
       }).join('');
     }
     /**
@@ -43129,10 +42672,10 @@ var Theme = /*#__PURE__*/function () {
   }, {
     key: "makeMenSvgIconSet",
     value: function makeMenSvgIconSet(useIconTypes, menuName) {
-      var _context6;
+      var _context5;
 
       var isSubmenu = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : false;
-      return concat_default()(_context6 = "<svg class=\"svg_ic-".concat(isSubmenu ? 'submenu' : 'menu', "\">")).call(_context6, this._makeSvgItem(useIconTypes, menuName, isSubmenu), "</svg>");
+      return concat_default()(_context5 = "<svg class=\"svg_ic-".concat(isSubmenu ? 'submenu' : 'menu', "\">")).call(_context5, this._makeSvgItem(useIconTypes, menuName, isSubmenu), "</svg>");
     }
   }]);
 
@@ -43225,14 +42768,13 @@ function _getPrototypeOf(o) {
   };
   return _getPrototypeOf(o);
 }
-// EXTERNAL MODULE: ./node_modules/tui-code-snippet/collection/forEachArray.js
-var forEachArray = __webpack_require__(6092);
+// EXTERNAL MODULE: ../../node_modules/tui-code-snippet/collection/forEachArray.js
+var forEachArray = __webpack_require__(893);
 var forEachArray_default = /*#__PURE__*/__webpack_require__.n(forEachArray);
 // EXTERNAL MODULE: external {"commonjs":"tui-color-picker","commonjs2":"tui-color-picker","amd":"tui-color-picker","root":["tui","colorPicker"]}
 var external_commonjs_tui_color_picker_commonjs2_tui_color_picker_amd_tui_color_picker_root_tui_colorPicker_ = __webpack_require__(4858);
 var external_commonjs_tui_color_picker_commonjs2_tui_color_picker_amd_tui_color_picker_root_tui_colorPicker_default = /*#__PURE__*/__webpack_require__.n(external_commonjs_tui_color_picker_commonjs2_tui_color_picker_amd_tui_color_picker_root_tui_colorPicker_);
 ;// CONCATENATED MODULE: ./src/js/ui/tools/colorpicker.js
-
 
 
 
@@ -43381,8 +42923,7 @@ var Colorpicker = /*#__PURE__*/function () {
   }, {
     key: "_addEvent",
     value: function _addEvent() {
-      var _this2 = this,
-          _context;
+      var _this2 = this;
 
       this.picker.on('selectColor', function (value) {
         _this2._changeColorElement(value.color);
@@ -43392,7 +42933,7 @@ var Colorpicker = /*#__PURE__*/function () {
         _this2.fire('change', value.color);
       });
       this.eventHandler = {
-        pickerToggle: bind_default()(_context = this._pickerToggleEventHandler).call(_context, this),
+        pickerToggle: this._pickerToggleEventHandler.bind(this),
         pickerHide: function pickerHide() {
           return _this2.hide();
         }
@@ -43514,9 +43055,6 @@ customEvents_default().mixin(Colorpicker);
 
 
 
-
-
-
 var INPUT_FILTER_REGEXP = /(-?)([0-9]*)[^0-9]*([0-9]*)/g;
 /**
  * Range control class
@@ -43539,8 +43077,6 @@ var Range = /*#__PURE__*/function () {
    *  @param {boolean} [options.realTimeEvent] - Reflect live events.
    */
   function Range(rangeElements) {
-    var _context, _context2, _context3, _context4, _context5, _context6, _context7;
-
     var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
 
     _classCallCheck(this, Range);
@@ -43559,13 +43095,13 @@ var Range = /*#__PURE__*/function () {
     this.realTimeEvent = options.realTimeEvent || false;
     this._userInputTimer = null;
     this.eventHandler = {
-      startChangingSlide: bind_default()(_context = this._startChangingSlide).call(_context, this),
-      stopChangingSlide: bind_default()(_context2 = this._stopChangingSlide).call(_context2, this),
-      changeSlide: bind_default()(_context3 = this._changeSlide).call(_context3, this),
-      changeSlideFinally: bind_default()(_context4 = this._changeSlideFinally).call(_context4, this),
-      changeInput: bind_default()(_context5 = this._changeInput).call(_context5, this),
-      changeInputFinally: bind_default()(_context6 = this._changeValueWithInput).call(_context6, this, true),
-      changeInputWithArrow: bind_default()(_context7 = this._changeValueWithInputKeyEvent).call(_context7, this)
+      startChangingSlide: this._startChangingSlide.bind(this),
+      stopChangingSlide: this._stopChangingSlide.bind(this),
+      changeSlide: this._changeSlide.bind(this),
+      changeSlideFinally: this._changeSlideFinally.bind(this),
+      changeInput: this._changeInput.bind(this),
+      changeInputFinally: this._changeValueWithInput.bind(this, true),
+      changeInputWithArrow: this._changeValueWithInputKeyEvent.bind(this)
     };
 
     this._addClickEvent();
@@ -43739,12 +43275,10 @@ var Range = /*#__PURE__*/function () {
   }, {
     key: "_changeValueWithInputKeyEvent",
     value: function _changeValueWithInputKeyEvent(event) {
-      var _context8;
-
       var keyCode = event.keyCode,
           target = event.target;
 
-      if (index_of_default()(_context8 = [keyCodes.ARROW_UP, keyCodes.ARROW_DOWN]).call(_context8, keyCode) < 0) {
+      if ([keyCodes.ARROW_UP, keyCodes.ARROW_DOWN].indexOf(keyCode) < 0) {
         return;
       }
 
@@ -43792,7 +43326,7 @@ var Range = /*#__PURE__*/function () {
         return;
       }
 
-      this._userInputTimer = set_timeout_default()(function () {
+      this._userInputTimer = setTimeout(function () {
         _this2._inputSetValue(event.target.value);
       }, 350);
     }
@@ -43814,12 +43348,10 @@ var Range = /*#__PURE__*/function () {
   }, {
     key: "_changeValueWithInput",
     value: function _changeValueWithInput(isLast, event) {
-      var _context9;
-
       var keyCode = event.keyCode,
           target = event.target;
 
-      if (index_of_default()(_context9 = [keyCodes.ARROW_UP, keyCodes.ARROW_DOWN]).call(_context9, keyCode) >= 0) {
+      if ([keyCodes.ARROW_UP, keyCodes.ARROW_DOWN].indexOf(keyCode) >= 0) {
         return;
       }
 
@@ -43962,7 +43494,6 @@ customEvents_default().mixin(Range);
 
 
 
-
 /**
  * Submenu Base Class
  * @class
@@ -44036,9 +43567,7 @@ var Submenu = /*#__PURE__*/function () {
   }, {
     key: "colorPickerChangeShow",
     value: function colorPickerChangeShow(occurredControl) {
-      var _context;
-
-      for_each_default()(_context = this.colorPickerControls).call(_context, function (pickerControl) {
+      this.colorPickerControls.forEach(function (pickerControl) {
         if (occurredControl !== pickerControl) {
           pickerControl.hide();
         }
@@ -44154,7 +43683,6 @@ customEvents_default().mixin(Submenu);
 
 
 
-
 function _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function _createSuperInternal() { var Super = _getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf(this).constructor; result = construct_default()(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
 
 function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !(construct_default())) return false; if ((construct_default()).sham) return false; if (typeof Proxy === "function") return true; try { Boolean.prototype.valueOf.call(construct_default()(Boolean, [], function () {})); return true; } catch (e) { return false; } }
@@ -44261,34 +43789,26 @@ var Shape = /*#__PURE__*/function (_Submenu) {
   }, {
     key: "addEvent",
     value: function addEvent(actions) {
-      var _context,
-          _context2,
-          _context3,
-          _context4,
-          _context5,
-          _context6,
-          _this2 = this;
+      var _this2 = this;
 
-      this.eventHandler.shapeTypeSelected = bind_default()(_context = this._changeShapeHandler).call(_context, this);
+      this.eventHandler.shapeTypeSelected = this._changeShapeHandler.bind(this);
       this.actions = actions;
 
       this._els.shapeSelectButton.addEventListener('click', this.eventHandler.shapeTypeSelected);
 
-      this._els.strokeRange.on('change', bind_default()(_context2 = this._changeStrokeRangeHandler).call(_context2, this));
+      this._els.strokeRange.on('change', this._changeStrokeRangeHandler.bind(this));
 
-      this._els.fillColorpicker.on('change', bind_default()(_context3 = this._changeFillColorHandler).call(_context3, this));
+      this._els.fillColorpicker.on('change', this._changeFillColorHandler.bind(this));
 
-      this._els.strokeColorpicker.on('change', bind_default()(_context4 = this._changeStrokeColorHandler).call(_context4, this));
+      this._els.strokeColorpicker.on('change', this._changeStrokeColorHandler.bind(this));
 
-      this._els.fillColorpicker.on('changeShow', bind_default()(_context5 = this.colorPickerChangeShow).call(_context5, this));
+      this._els.fillColorpicker.on('changeShow', this.colorPickerChangeShow.bind(this));
 
-      this._els.strokeColorpicker.on('changeShow', bind_default()(_context6 = this.colorPickerChangeShow).call(_context6, this));
+      this._els.strokeColorpicker.on('changeShow', this.colorPickerChangeShow.bind(this));
 
       forEachArray_default()(this.colorPickerInputBoxes, function (inputBox) {
-        var _context7, _context8;
-
-        inputBox.addEventListener(eventNames.FOCUS, bind_default()(_context7 = _this2._onStartEditingInputBox).call(_context7, _this2));
-        inputBox.addEventListener(eventNames.BLUR, bind_default()(_context8 = _this2._onStopEditingInputBox).call(_context8, _this2));
+        inputBox.addEventListener(eventNames.FOCUS, _this2._onStartEditingInputBox.bind(_this2));
+        inputBox.addEventListener(eventNames.BLUR, _this2._onStopEditingInputBox.bind(_this2));
       }, this);
     }
     /**
@@ -44310,10 +43830,8 @@ var Shape = /*#__PURE__*/function (_Submenu) {
       this._els.strokeColorpicker.off();
 
       forEachArray_default()(this.colorPickerInputBoxes, function (inputBox) {
-        var _context9, _context10;
-
-        inputBox.removeEventListener(eventNames.FOCUS, bind_default()(_context9 = _this3._onStartEditingInputBox).call(_context9, _this3));
-        inputBox.removeEventListener(eventNames.BLUR, bind_default()(_context10 = _this3._onStopEditingInputBox).call(_context10, _this3));
+        inputBox.removeEventListener(eventNames.FOCUS, _this3._onStartEditingInputBox.bind(_this3));
+        inputBox.removeEventListener(eventNames.BLUR, _this3._onStopEditingInputBox.bind(_this3));
       }, this);
     }
     /**
@@ -44508,7 +44026,6 @@ var Shape = /*#__PURE__*/function (_Submenu) {
 
 
 
-
 function crop_createSuper(Derived) { var hasNativeReflectConstruct = crop_isNativeReflectConstruct(); return function _createSuperInternal() { var Super = _getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf(this).constructor; result = construct_default()(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
 
 function crop_isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !(construct_default())) return false; if ((construct_default()).sham) return false; if (typeof Proxy === "function") return true; try { Boolean.prototype.valueOf.call(construct_default()(Boolean, [], function () {})); return true; } catch (e) { return false; } }
@@ -44578,13 +44095,11 @@ var Crop = /*#__PURE__*/function (_Submenu) {
   }, {
     key: "addEvent",
     value: function addEvent(actions) {
-      var _context, _context2, _context3;
+      var apply = this._applyEventHandler.bind(this);
 
-      var apply = bind_default()(_context = this._applyEventHandler).call(_context, this);
+      var cancel = this._cancelEventHandler.bind(this);
 
-      var cancel = bind_default()(_context2 = this._cancelEventHandler).call(_context2, this);
-
-      var cropzonePreset = bind_default()(_context3 = this._cropzonePresetEventHandler).call(_context3, this);
+      var cropzonePreset = this._cropzonePresetEventHandler.bind(this);
 
       this.eventHandler = {
         apply: apply,
@@ -44717,7 +44232,6 @@ var Crop = /*#__PURE__*/function (_Submenu) {
   return concat_default()(_context = concat_default()(_context2 = concat_default()(_context3 = concat_default()(_context4 = concat_default()(_context5 = concat_default()(_context6 = "\n    <ul class=\"tui-image-editor-submenu-item\">\n        <li class=\"tui-image-editor-submenu-align\">\n            <div class=\"tui-image-editor-range-wrap tui-image-editor-newline\">\n                <label class=\"range\">".concat(locale.localize('Width'), "&nbsp;</label>\n                <div class=\"tie-width-range\"></div>\n                <input class=\"tie-width-range-value tui-image-editor-range-value\" value=\"0\" /> <label>px</label>\n                <div class=\"tui-image-editor-partition tui-image-editor-newline\"></div>\n                <label class=\"range\">")).call(_context6, locale.localize('Height'), "</label>\n                <div class=\"tie-height-range\"></div>\n                <input class=\"tie-height-range-value tui-image-editor-range-value\" value=\"0\" /> <label>px</label>\n            </div>\n        </li>\n        <li class=\"tui-image-editor-partition tui-image-editor-newline\"></li>\n        <li class=\"tui-image-editor-partition only-left-right\">\n            <div></div>\n        </li>\n        <li class=\"tui-image-editor-submenu-align\">\n            <div class=\"tui-image-editor-checkbox-wrap\">\n                <div class=\"tui-image-editor-checkbox\">\n                    <label>\n                        <input type=\"checkbox\" class=\"tie-lock-aspect-ratio\">\n                        <span>")).call(_context5, locale.localize('Lock Aspect Ratio'), "</span>\n                    </label>\n                </div>\n            </div>\n        </li>\n        <li class=\"tui-image-editor-partition tui-image-editor-newline\"></li>\n        <li class=\"tui-image-editor-partition only-left-right\">\n            <div></div>\n        </li>\n        <li class=\"tui-image-editor-partition tui-image-editor-newline\"></li>\n        <li class=\"tie-resize-button action\">\n            <div class=\"tui-image-editor-button apply\">\n                ")).call(_context4, makeSvgIcon(['normal', 'active'], 'apply'), "\n                <label>\n                    ")).call(_context3, locale.localize('Apply'), "\n                </label>\n            </div>\n            <div class=\"tui-image-editor-button cancel\">\n                ")).call(_context2, makeSvgIcon(['normal', 'active'], 'cancel'), "\n                <label>\n                    ")).call(_context, locale.localize('Cancel'), "\n                </label>\n            </div>\n        </li>\n    </ul>\n");
 });
 ;// CONCATENATED MODULE: ./src/js/ui/resize.js
-
 
 
 
@@ -44918,17 +44432,15 @@ var Resize = /*#__PURE__*/function (_Submenu) {
   }, {
     key: "addEvent",
     value: function addEvent(actions) {
-      var _context, _context2, _context3, _context4, _context5;
+      this._els.widthRange.on('change', this._changeWidthRangeHandler.bind(this));
 
-      this._els.widthRange.on('change', bind_default()(_context = this._changeWidthRangeHandler).call(_context, this));
+      this._els.heightRange.on('change', this._changeHeightRangeHandler.bind(this));
 
-      this._els.heightRange.on('change', bind_default()(_context2 = this._changeHeightRangeHandler).call(_context2, this));
+      this._els.lockAspectRatio.addEventListener('change', this._changeLockAspectRatio.bind(this));
 
-      this._els.lockAspectRatio.addEventListener('change', bind_default()(_context3 = this._changeLockAspectRatio).call(_context3, this));
+      var apply = this._applyEventHandler.bind(this);
 
-      var apply = bind_default()(_context4 = this._applyEventHandler).call(_context4, this);
-
-      var cancel = bind_default()(_context5 = this._cancelEventHandler).call(_context5, this);
+      var cancel = this._cancelEventHandler.bind(this);
 
       this.eventHandler = {
         apply: apply,
@@ -45044,7 +44556,6 @@ var Resize = /*#__PURE__*/function (_Submenu) {
 
 
 
-
 function flip_createSuper(Derived) { var hasNativeReflectConstruct = flip_isNativeReflectConstruct(); return function _createSuperInternal() { var Super = _getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf(this).constructor; result = construct_default()(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
 
 function flip_isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !(construct_default())) return false; if ((construct_default()).sham) return false; if (typeof Proxy === "function") return true; try { Boolean.prototype.valueOf.call(construct_default()(Boolean, [], function () {})); return true; } catch (e) { return false; } }
@@ -45109,9 +44620,7 @@ var Flip = /*#__PURE__*/function (_Submenu) {
   }, {
     key: "addEvent",
     value: function addEvent(actions) {
-      var _context;
-
-      this.eventHandler.changeFlip = bind_default()(_context = this._changeFlip).call(_context, this);
+      this.eventHandler.changeFlip = this._changeFlip.bind(this);
       this._actions = actions;
 
       this._els.flipButton.addEventListener('click', this.eventHandler.changeFlip);
@@ -45192,8 +44701,6 @@ var Flip = /*#__PURE__*/function (_Submenu) {
 
 
 
-
-
 function rotate_createSuper(Derived) { var hasNativeReflectConstruct = rotate_isNativeReflectConstruct(); return function _createSuperInternal() { var Super = _getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf(this).constructor; result = construct_default()(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
 
 function rotate_isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !(construct_default())) return false; if ((construct_default()).sham) return false; if (typeof Proxy === "function") return true; try { Boolean.prototype.valueOf.call(construct_default()(Boolean, [], function () {})); return true; } catch (e) { return false; } }
@@ -45264,7 +44771,7 @@ var Rotate = /*#__PURE__*/function (_Submenu) {
       var resultAngle = angle;
 
       if (type === 'rotate') {
-        resultAngle = parse_int_default()(this._els.rotateRange.value, 10) + angle;
+        resultAngle = parseInt(this._els.rotateRange.value, 10) + angle;
       }
 
       this._setRangeBarRatio(resultAngle);
@@ -45284,15 +44791,13 @@ var Rotate = /*#__PURE__*/function (_Submenu) {
   }, {
     key: "addEvent",
     value: function addEvent(actions) {
-      var _context, _context2;
-
-      this.eventHandler.rotationAngleChanged = bind_default()(_context = this._changeRotateForButton).call(_context, this); // {rotate, setAngle}
+      this.eventHandler.rotationAngleChanged = this._changeRotateForButton.bind(this); // {rotate, setAngle}
 
       this.actions = actions;
 
       this._els.rotateButton.addEventListener('click', this.eventHandler.rotationAngleChanged);
 
-      this._els.rotateRange.on('change', bind_default()(_context2 = this._changeRotateForRange).call(_context2, this));
+      this._els.rotateRange.on('change', this._changeRotateForRange.bind(this));
     }
     /**
      * Remove event
@@ -45338,7 +44843,7 @@ var Rotate = /*#__PURE__*/function (_Submenu) {
           clockwise: CLOCKWISE,
           counterclockwise: COUNTERCLOCKWISE
         }[rotateType];
-        var newAngle = parse_int_default()(angle, 10) + rotateAngle;
+        var newAngle = parseInt(angle, 10) + rotateAngle;
         var isRotatable = newAngle >= -360 && newAngle <= 360;
 
         if (isRotatable) {
@@ -45369,7 +44874,6 @@ var Rotate = /*#__PURE__*/function (_Submenu) {
   return concat_default()(_context = concat_default()(_context2 = concat_default()(_context3 = concat_default()(_context4 = concat_default()(_context5 = concat_default()(_context6 = concat_default()(_context7 = concat_default()(_context8 = concat_default()(_context9 = concat_default()(_context10 = concat_default()(_context11 = concat_default()(_context12 = concat_default()(_context13 = "\n    <ul class=\"tui-image-editor-submenu-item\">\n        <li class=\"tie-text-effect-button\">\n            <div class=\"tui-image-editor-button bold\">\n                <div>\n                    ".concat(makeSvgIcon(['normal', 'active'], 'text-bold', true), "\n                </div>\n                <label> ")).call(_context13, locale.localize('Bold'), " </label>\n            </div>\n            <div class=\"tui-image-editor-button italic\">\n                <div>\n                    ")).call(_context12, makeSvgIcon(['normal', 'active'], 'text-italic', true), "\n                </div>\n                <label> ")).call(_context11, locale.localize('Italic'), " </label>\n            </div>\n            <div class=\"tui-image-editor-button underline\">\n                <div>\n                    ")).call(_context10, makeSvgIcon(['normal', 'active'], 'text-underline', true), "\n                </div>\n                <label> ")).call(_context9, locale.localize('Underline'), " </label>\n            </div>\n        </li>\n        <li class=\"tui-image-editor-partition\">\n            <div></div>\n        </li>\n        <li class=\"tie-text-align-button\">\n            <div class=\"tui-image-editor-button left\">\n                <div>\n                    ")).call(_context8, makeSvgIcon(['normal', 'active'], 'text-align-left', true), "\n                </div>\n                <label> ")).call(_context7, locale.localize('Left'), " </label>\n            </div>\n            <div class=\"tui-image-editor-button center\">\n                <div>\n                    ")).call(_context6, makeSvgIcon(['normal', 'active'], 'text-align-center', true), "\n                </div>\n                <label> ")).call(_context5, locale.localize('Center'), " </label>\n            </div>\n            <div class=\"tui-image-editor-button right\">\n                <div>\n                    ")).call(_context4, makeSvgIcon(['normal', 'active'], 'text-align-right', true), "\n                </div>\n                <label> ")).call(_context3, locale.localize('Right'), " </label>\n            </div>\n        </li>\n        <li class=\"tui-image-editor-partition\">\n            <div></div>\n        </li>\n        <li>\n            <div class=\"tie-text-color\" title=\"")).call(_context2, locale.localize('Color'), "\"></div>\n        </li>\n        <li class=\"tui-image-editor-partition only-left-right\">\n            <div></div>\n        </li>\n        <li class=\"tui-image-editor-newline tui-image-editor-range-wrap\">\n            <label class=\"range\">")).call(_context, locale.localize('Text size'), "</label>\n            <div class=\"tie-text-range\"></div>\n            <input class=\"tie-text-range-value tui-image-editor-range-value\" value=\"0\" />\n        </li>\n    </ul>\n");
 });
 ;// CONCATENATED MODULE: ./src/js/ui/text.js
-
 
 
 
@@ -45465,11 +44969,9 @@ var Text = /*#__PURE__*/function (_Submenu) {
   }, {
     key: "addEvent",
     value: function addEvent(actions) {
-      var _context, _context2, _context3, _context4, _context5, _context6;
+      var setTextEffect = this._setTextEffectHandler.bind(this);
 
-      var setTextEffect = bind_default()(_context = this._setTextEffectHandler).call(_context, this);
-
-      var setTextAlign = bind_default()(_context2 = this._setTextAlignHandler).call(_context2, this);
+      var setTextAlign = this._setTextAlignHandler.bind(this);
 
       this.eventHandler = {
         setTextEffect: setTextEffect,
@@ -45481,12 +44983,12 @@ var Text = /*#__PURE__*/function (_Submenu) {
 
       this._els.textAlignButton.addEventListener('click', setTextAlign);
 
-      this._els.textRange.on('change', bind_default()(_context3 = this._changeTextRnageHandler).call(_context3, this));
+      this._els.textRange.on('change', this._changeTextRnageHandler.bind(this));
 
-      this._els.textColorpicker.on('change', bind_default()(_context4 = this._changeColorHandler).call(_context4, this));
+      this._els.textColorpicker.on('change', this._changeColorHandler.bind(this));
 
-      this.colorPickerInputBox.addEventListener(eventNames.FOCUS, bind_default()(_context5 = this._onStartEditingInputBox).call(_context5, this));
-      this.colorPickerInputBox.addEventListener(eventNames.BLUR, bind_default()(_context6 = this._onStopEditingInputBox).call(_context6, this));
+      this.colorPickerInputBox.addEventListener(eventNames.FOCUS, this._onStartEditingInputBox.bind(this));
+      this.colorPickerInputBox.addEventListener(eventNames.BLUR, this._onStopEditingInputBox.bind(this));
     }
     /**
      * Remove event
@@ -45496,8 +44998,6 @@ var Text = /*#__PURE__*/function (_Submenu) {
   }, {
     key: "_removeEvent",
     value: function _removeEvent() {
-      var _context7, _context8;
-
       var _this$eventHandler = this.eventHandler,
           setTextEffect = _this$eventHandler.setTextEffect,
           setTextAlign = _this$eventHandler.setTextAlign;
@@ -45510,8 +45010,8 @@ var Text = /*#__PURE__*/function (_Submenu) {
 
       this._els.textColorpicker.off();
 
-      this.colorPickerInputBox.removeEventListener(eventNames.FOCUS, bind_default()(_context7 = this._onStartEditingInputBox).call(_context7, this));
-      this.colorPickerInputBox.removeEventListener(eventNames.BLUR, bind_default()(_context8 = this._onStopEditingInputBox).call(_context8, this));
+      this.colorPickerInputBox.removeEventListener(eventNames.FOCUS, this._onStartEditingInputBox.bind(this));
+      this.colorPickerInputBox.removeEventListener(eventNames.BLUR, this._onStopEditingInputBox.bind(this));
     }
     /**
      * Returns the menu to its default state.
@@ -45747,7 +45247,6 @@ var Text = /*#__PURE__*/function (_Submenu) {
 
 
 
-
 function mask_createSuper(Derived) { var hasNativeReflectConstruct = mask_isNativeReflectConstruct(); return function _createSuperInternal() { var Super = _getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf(this).constructor; result = construct_default()(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
 
 function mask_isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !(construct_default())) return false; if ((construct_default()).sham) return false; if (typeof Proxy === "function") return true; try { Boolean.prototype.valueOf.call(construct_default()(Boolean, [], function () {})); return true; } catch (e) { return false; } }
@@ -45812,11 +45311,9 @@ var Mask = /*#__PURE__*/function (_Submenu) {
   }, {
     key: "addEvent",
     value: function addEvent(actions) {
-      var _context, _context2;
+      var loadMaskFile = this._loadMaskFile.bind(this);
 
-      var loadMaskFile = bind_default()(_context = this._loadMaskFile).call(_context, this);
-
-      var applyMask = bind_default()(_context2 = this._applyMask).call(_context2, this);
+      var applyMask = this._applyMask.bind(this);
 
       this.eventHandler = {
         loadMaskFile: loadMaskFile,
@@ -45909,7 +45406,6 @@ var Mask = /*#__PURE__*/function (_Submenu) {
 
 
 
-
 function icon_createSuper(Derived) { var hasNativeReflectConstruct = icon_isNativeReflectConstruct(); return function _createSuperInternal() { var Super = _getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf(this).constructor; result = construct_default()(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
 
 function icon_isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !(construct_default())) return false; if ((construct_default()).sham) return false; if (typeof Proxy === "function") return true; try { Boolean.prototype.valueOf.call(construct_default()(Boolean, [], function () {})); return true; } catch (e) { return false; } }
@@ -45988,11 +45484,9 @@ var Icon = /*#__PURE__*/function (_Submenu) {
   }, {
     key: "addEvent",
     value: function addEvent(actions) {
-      var _context, _context2, _context3, _context4, _context5;
+      var registerIcon = this._registerIconHandler.bind(this);
 
-      var registerIcon = bind_default()(_context = this._registerIconHandler).call(_context, this);
-
-      var addIcon = bind_default()(_context2 = this._addIconHandler).call(_context2, this);
+      var addIcon = this._addIconHandler.bind(this);
 
       this.eventHandler = {
         registerIcon: registerIcon,
@@ -46000,14 +45494,14 @@ var Icon = /*#__PURE__*/function (_Submenu) {
       };
       this.actions = actions;
 
-      this._els.iconColorpicker.on('change', bind_default()(_context3 = this._changeColorHandler).call(_context3, this));
+      this._els.iconColorpicker.on('change', this._changeColorHandler.bind(this));
 
       this._els.registerIconButton.addEventListener('change', registerIcon);
 
       this._els.addIconButton.addEventListener('click', addIcon);
 
-      this.colorPickerInputBox.addEventListener(eventNames.FOCUS, bind_default()(_context4 = this._onStartEditingInputBox).call(_context4, this));
-      this.colorPickerInputBox.addEventListener(eventNames.BLUR, bind_default()(_context5 = this._onStopEditingInputBox).call(_context5, this));
+      this.colorPickerInputBox.addEventListener(eventNames.FOCUS, this._onStartEditingInputBox.bind(this));
+      this.colorPickerInputBox.addEventListener(eventNames.BLUR, this._onStopEditingInputBox.bind(this));
     }
     /**
      * Remove event
@@ -46017,16 +45511,14 @@ var Icon = /*#__PURE__*/function (_Submenu) {
   }, {
     key: "_removeEvent",
     value: function _removeEvent() {
-      var _context6, _context7;
-
       this._els.iconColorpicker.off();
 
       this._els.registerIconButton.removeEventListener('change', this.eventHandler.registerIcon);
 
       this._els.addIconButton.removeEventListener('click', this.eventHandler.addIcon);
 
-      this.colorPickerInputBox.removeEventListener(eventNames.FOCUS, bind_default()(_context6 = this._onStartEditingInputBox).call(_context6, this));
-      this.colorPickerInputBox.removeEventListener(eventNames.BLUR, bind_default()(_context7 = this._onStopEditingInputBox).call(_context7, this));
+      this.colorPickerInputBox.removeEventListener(eventNames.FOCUS, this._onStartEditingInputBox.bind(this));
+      this.colorPickerInputBox.removeEventListener(eventNames.BLUR, this._onStopEditingInputBox.bind(this));
     }
     /**
      * Clear icon type
@@ -46166,7 +45658,6 @@ var Icon = /*#__PURE__*/function (_Submenu) {
 
 
 
-
 function draw_createSuper(Derived) { var hasNativeReflectConstruct = draw_isNativeReflectConstruct(); return function _createSuperInternal() { var Super = _getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf(this).constructor; result = construct_default()(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
 
 function draw_isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !(construct_default())) return false; if ((construct_default()).sham) return false; if (typeof Proxy === "function") return true; try { Boolean.prototype.valueOf.call(construct_default()(Boolean, [], function () {})); return true; } catch (e) { return false; } }
@@ -46250,19 +45741,17 @@ var Draw = /*#__PURE__*/function (_Submenu) {
   }, {
     key: "addEvent",
     value: function addEvent(actions) {
-      var _context, _context2, _context3, _context4, _context5;
-
-      this.eventHandler.changeDrawType = bind_default()(_context = this._changeDrawType).call(_context, this);
+      this.eventHandler.changeDrawType = this._changeDrawType.bind(this);
       this.actions = actions;
 
       this._els.lineSelectButton.addEventListener('click', this.eventHandler.changeDrawType);
 
-      this._els.drawColorPicker.on('change', bind_default()(_context2 = this._changeDrawColor).call(_context2, this));
+      this._els.drawColorPicker.on('change', this._changeDrawColor.bind(this));
 
-      this._els.drawRange.on('change', bind_default()(_context3 = this._changeDrawRange).call(_context3, this));
+      this._els.drawRange.on('change', this._changeDrawRange.bind(this));
 
-      this.colorPickerInputBox.addEventListener(eventNames.FOCUS, bind_default()(_context4 = this._onStartEditingInputBox).call(_context4, this));
-      this.colorPickerInputBox.addEventListener(eventNames.BLUR, bind_default()(_context5 = this._onStopEditingInputBox).call(_context5, this));
+      this.colorPickerInputBox.addEventListener(eventNames.FOCUS, this._onStartEditingInputBox.bind(this));
+      this.colorPickerInputBox.addEventListener(eventNames.BLUR, this._onStopEditingInputBox.bind(this));
     }
     /**
      * Remove event
@@ -46272,16 +45761,14 @@ var Draw = /*#__PURE__*/function (_Submenu) {
   }, {
     key: "_removeEvent",
     value: function _removeEvent() {
-      var _context6, _context7;
-
       this._els.lineSelectButton.removeEventListener('click', this.eventHandler.changeDrawType);
 
       this._els.drawColorPicker.off();
 
       this._els.drawRange.off();
 
-      this.colorPickerInputBox.removeEventListener(eventNames.FOCUS, bind_default()(_context6 = this._onStartEditingInputBox).call(_context6, this));
-      this.colorPickerInputBox.removeEventListener(eventNames.BLUR, bind_default()(_context7 = this._onStopEditingInputBox).call(_context7, this));
+      this.colorPickerInputBox.removeEventListener(eventNames.FOCUS, this._onStartEditingInputBox.bind(this));
+      this.colorPickerInputBox.removeEventListener(eventNames.BLUR, this._onStopEditingInputBox.bind(this));
     }
     /**
      * set draw mode - action runner
@@ -46391,8 +45878,8 @@ var Draw = /*#__PURE__*/function (_Submenu) {
 }(submenuBase);
 
 /* harmony default export */ var ui_draw = (Draw);
-// EXTERNAL MODULE: ./node_modules/tui-code-snippet/type/isExisty.js
-var isExisty = __webpack_require__(9886);
+// EXTERNAL MODULE: ../../node_modules/tui-code-snippet/type/isExisty.js
+var isExisty = __webpack_require__(7065);
 var isExisty_default = /*#__PURE__*/__webpack_require__.n(isExisty);
 ;// CONCATENATED MODULE: ./src/js/ui/template/submenu/filter.js
 
@@ -46408,8 +45895,6 @@ var isExisty_default = /*#__PURE__*/__webpack_require__.n(isExisty);
   return concat_default()(_context = concat_default()(_context2 = concat_default()(_context3 = concat_default()(_context4 = concat_default()(_context5 = concat_default()(_context6 = concat_default()(_context7 = concat_default()(_context8 = concat_default()(_context9 = concat_default()(_context10 = concat_default()(_context11 = concat_default()(_context12 = concat_default()(_context13 = concat_default()(_context14 = concat_default()(_context15 = concat_default()(_context16 = "\n    <ul class=\"tui-image-editor-submenu-item\">\n        <li class=\"tui-image-editor-submenu-align\">\n            <div class=\"tui-image-editor-checkbox-wrap fixed-width\">\n                <div class=\"tui-image-editor-checkbox\">\n                    <label>\n                        <input type=\"checkbox\" class=\"tie-grayscale\">\n                        <span>".concat(locale.localize('Grayscale'), "</span>\n                    </label>\n                </div>\n                <div class=\"tui-image-editor-checkbox\">\n                    <label>\n                        <input type=\"checkbox\" class=\"tie-invert\">\n                        <span>")).call(_context16, locale.localize('Invert'), "</span>\n                    </label>\n                </div>\n                <div class=\"tui-image-editor-checkbox\">\n                    <label>\n                        <input type=\"checkbox\" class=\"tie-sepia\">\n                        <span>")).call(_context15, locale.localize('Sepia'), "</span>\n                    </label>\n                </div>\n                <div class=\"tui-image-editor-checkbox\">\n                    <label>\n                        <input type=\"checkbox\" class=\"tie-vintage\">\n                        <span>")).call(_context14, locale.localize('Sepia2'), "</span>\n                    </label>\n                </div>\n                <div class=\"tui-image-editor-checkbox\">\n                    <label>\n                        <input type=\"checkbox\" class=\"tie-blur\">\n                        <span>")).call(_context13, locale.localize('Blur'), "</span>\n                    </label>\n                </div>\n                <div class=\"tui-image-editor-checkbox\">\n                    <label>\n                        <input type=\"checkbox\" class=\"tie-sharpen\">\n                        <span>")).call(_context12, locale.localize('Sharpen'), "</span>\n                    </label>\n                </div>\n                <div class=\"tui-image-editor-checkbox\">\n                    <label>\n                        <input type=\"checkbox\" class=\"tie-emboss\">\n                        <span>")).call(_context11, locale.localize('Emboss'), "</span>\n                    </label>\n                </div>\n            </div>\n        </li>\n        <li class=\"tui-image-editor-partition\">\n            <div></div>\n        </li>\n        <li class=\"tui-image-editor-submenu-align\">\n            <div class=\"tui-image-editor-checkbox-group tui-image-editor-disabled\" style=\"margin-bottom: 7px;\">\n                <div class=\"tui-image-editor-checkbox-wrap\">\n                    <div class=\"tui-image-editor-checkbox\">\n                        <label>\n                            <input type=\"checkbox\" class=\"tie-remove-white\">\n                            <span>")).call(_context10, locale.localize('Remove White'), "</span>\n                        </label>\n                    </div>\n                </div>\n                <div class=\"tui-image-editor-newline tui-image-editor-range-wrap short\">\n                    <label>")).call(_context9, locale.localize('Distance'), "</label>\n                    <div class=\"tie-removewhite-distance-range\"></div>\n                </div>\n            </div>\n            <div class=\"tui-image-editor-checkbox-group tui-image-editor-disabled\">\n                <div class=\"tui-image-editor-checkbox\">\n                    <label>\n                        <input type=\"checkbox\" class=\"tie-brightness\">\n                        <span>")).call(_context8, locale.localize('Brightness'), "</span>\n                    </label>\n                </div>\n                <div class=\"tui-image-editor-range-wrap short\">\n                    <div class=\"tie-brightness-range\"></div>\n                </div>\n            </div>\n            <div class=\"tui-image-editor-checkbox-group tui-image-editor-disabled\">\n                <div class=\"tui-image-editor-checkbox\">\n                    <label>\n                        <input type=\"checkbox\" class=\"tie-noise\">\n                        <span>")).call(_context7, locale.localize('Noise'), "</span>\n                    </label>\n                </div>\n                <div class=\"tui-image-editor-range-wrap short\">\n                    <div class=\"tie-noise-range\"></div>\n                </div>\n            </div>\n        </li>\n        <li class=\"tui-image-editor-partition only-left-right\">\n            <div></div>\n        </li>\n        <li class=\"tui-image-editor-submenu-align\">\n            <div class=\"tui-image-editor-checkbox-group tui-image-editor-disabled\">\n                <div class=\"tui-image-editor-checkbox\">\n                    <label>\n                        <input type=\"checkbox\" class=\"tie-pixelate\">\n                        <span>")).call(_context6, locale.localize('Pixelate'), "</span>\n                    </label>\n                </div>\n                <div class=\"tui-image-editor-range-wrap short\">\n                    <div class=\"tie-pixelate-range\"></div>\n                </div>\n            </div>\n            <div class=\"tui-image-editor-checkbox-group tui-image-editor-disabled\">\n                <div class=\"tui-image-editor-newline tui-image-editor-checkbox-wrap\">\n                    <div class=\"tui-image-editor-checkbox\">\n                        <label>\n                            <input type=\"checkbox\" class=\"tie-color-filter\">\n                            <span>")).call(_context5, locale.localize('Color Filter'), "</span>\n                        </label>\n                    </div>\n                </div>\n                <div class=\"tui-image-editor-newline tui-image-editor-range-wrap short\">\n                    <label>")).call(_context4, locale.localize('Threshold'), "</label>\n                    <div class=\"tie-colorfilter-threshold-range\"></div>\n                </div>\n            </div>\n        </li>\n        <li class=\"tui-image-editor-partition\">\n            <div></div>\n        </li>\n        <li>\n            <div class=\"filter-color-item\">\n                <div class=\"tie-filter-tint-color\" title=\"")).call(_context3, locale.localize('Tint'), "\"></div>\n                <div class=\"tui-image-editor-checkbox\">\n                    <label>\n                        <input type=\"checkbox\" class=\"tie-tint\">\n                        <span></span>\n                    </label>\n                </div>\n            </div>\n            <div class=\"filter-color-item\">\n                <div class=\"tie-filter-multiply-color\" title=\"")).call(_context2, locale.localize('Multiply'), "\"></div>\n                <div class=\"tui-image-editor-checkbox\">\n                    <label>\n                        <input type=\"checkbox\" class=\"tie-multiply\">\n                        <span></span>\n                    </label>\n                </div>\n            </div>\n            <div class=\"filter-color-item\">\n                <div class=\"tie-filter-blend-color\" title=\"")).call(_context, locale.localize('Blend'), "\"></div>\n                <div class=\"tui-image-editor-checkbox\">\n                    <label>\n                        <input type=\"checkbox\" class=\"tie-blend\">\n                        <span></span>\n                    </label>\n                </div>\n            </div>\n        </li>\n    </ul>\n");
 });
 ;// CONCATENATED MODULE: ./src/js/ui/filter.js
-
-
 
 
 
@@ -46531,19 +46016,17 @@ var Filter = /*#__PURE__*/function (_Submenu) {
       this._els.blendType.removeEventListener('click', this.eventHandler.changeBlendFilter);
 
       forEachArray_default()(this.colorPickerInputBoxes, function (inputBox) {
-        var _context2, _context3;
-
-        inputBox.removeEventListener(eventNames.FOCUS, bind_default()(_context2 = _this2._onStartEditingInputBox).call(_context2, _this2));
-        inputBox.removeEventListener(eventNames.BLUR, bind_default()(_context3 = _this2._onStopEditingInputBox).call(_context3, _this2));
+        inputBox.removeEventListener(eventNames.FOCUS, _this2._onStartEditingInputBox.bind(_this2));
+        inputBox.removeEventListener(eventNames.BLUR, _this2._onStopEditingInputBox.bind(_this2));
       }, this);
     }
   }, {
     key: "_destroyToolInstance",
     value: function _destroyToolInstance() {
-      var _context4,
+      var _context2,
           _this3 = this;
 
-      forEach_default()(concat_default()(_context4 = []).call(_context4, RANGE_INSTANCE_NAMES, COLORPICKER_INSTANCE_NAMES), function (instanceName) {
+      forEach_default()(concat_default()(_context2 = []).call(_context2, RANGE_INSTANCE_NAMES, COLORPICKER_INSTANCE_NAMES), function (instanceName) {
         _this3._els[instanceName].destroy();
       });
     }
@@ -46556,17 +46039,12 @@ var Filter = /*#__PURE__*/function (_Submenu) {
   }, {
     key: "addEvent",
     value: function addEvent(_ref2) {
-      var _this4 = this,
-          _context6,
-          _context7,
-          _context8;
+      var _this4 = this;
 
       var applyFilter = _ref2.applyFilter;
 
       var changeFilterState = function changeFilterState(filterName) {
-        var _context5;
-
-        return bind_default()(_context5 = _this4._changeFilterState).call(_context5, _this4, applyFilter, filterName);
+        return _this4._changeFilterState.bind(_this4, applyFilter, filterName);
       };
 
       var changeFilterStateForRange = function changeFilterStateForRange(filterName) {
@@ -46608,21 +46086,19 @@ var Filter = /*#__PURE__*/function (_Submenu) {
 
       this._els.tintOpacity.on('change', changeFilterStateForRange('tint'));
 
-      this._els.filterMultiplyColor.on('changeShow', bind_default()(_context6 = this.colorPickerChangeShow).call(_context6, this));
+      this._els.filterMultiplyColor.on('changeShow', this.colorPickerChangeShow.bind(this));
 
-      this._els.filterTintColor.on('changeShow', bind_default()(_context7 = this.colorPickerChangeShow).call(_context7, this));
+      this._els.filterTintColor.on('changeShow', this.colorPickerChangeShow.bind(this));
 
-      this._els.filterBlendColor.on('changeShow', bind_default()(_context8 = this.colorPickerChangeShow).call(_context8, this));
+      this._els.filterBlendColor.on('changeShow', this.colorPickerChangeShow.bind(this));
 
       this._els.blendType.addEventListener('change', this.eventHandler.changeBlendFilter);
 
       this._els.blendType.addEventListener('click', this.eventHandler.blandTypeClick);
 
       forEachArray_default()(this.colorPickerInputBoxes, function (inputBox) {
-        var _context9, _context10;
-
-        inputBox.addEventListener(eventNames.FOCUS, bind_default()(_context9 = _this4._onStartEditingInputBox).call(_context9, _this4));
-        inputBox.addEventListener(eventNames.BLUR, bind_default()(_context10 = _this4._onStopEditingInputBox).call(_context10, _this4));
+        inputBox.addEventListener(eventNames.FOCUS, _this4._onStartEditingInputBox.bind(_this4));
+        inputBox.addEventListener(eventNames.BLUR, _this4._onStopEditingInputBox.bind(_this4));
       }, this);
     }
     /**
@@ -46758,12 +46234,12 @@ var Filter = /*#__PURE__*/function (_Submenu) {
         case 'removeWhite':
           option.color = '#FFFFFF';
           option.useAlpha = false;
-          option.distance = parse_float_default()(this._els.removewhiteDistanceRange.value);
+          option.distance = parseFloat(this._els.removewhiteDistanceRange.value);
           break;
 
         case 'colorFilter':
           option.color = '#FFFFFF';
-          option.distance = parse_float_default()(this._els.colorfilterThresholdRange.value);
+          option.distance = parseFloat(this._els.colorfilterThresholdRange.value);
           break;
 
         case 'pixelate':
@@ -46775,7 +46251,7 @@ var Filter = /*#__PURE__*/function (_Submenu) {
           break;
 
         case 'brightness':
-          option.brightness = parse_float_default()(this._els.brightnessRange.value);
+          option.brightness = parseFloat(this._els.brightnessRange.value);
           break;
 
         case 'blend':
@@ -46980,8 +46456,8 @@ var Filter = /*#__PURE__*/function (_Submenu) {
 
 /* harmony default export */ var ui_filter = (Filter);
 // EXTERNAL MODULE: ../../node_modules/@babel/runtime-corejs3/core-js-stable/number/parse-int.js
-var number_parse_int = __webpack_require__(4383);
-var number_parse_int_default = /*#__PURE__*/__webpack_require__.n(number_parse_int);
+var parse_int = __webpack_require__(4383);
+var parse_int_default = /*#__PURE__*/__webpack_require__.n(parse_int);
 ;// CONCATENATED MODULE: ./src/js/ui/panelMenu.js
 
 
@@ -47328,7 +46804,7 @@ var History = /*#__PURE__*/function (_Panel) {
         return;
       }
 
-      var index = number_parse_int_default()(item.getAttribute('data-index'), 10);
+      var index = parse_int_default()(item.getAttribute('data-index'), 10);
 
       if (index !== this._historyIndex) {
         var count = Math.abs(index - this._historyIndex);
@@ -47456,7 +46932,6 @@ var Locale = /*#__PURE__*/function () {
 
 
 
-
 function image_createSuper(Derived) { var hasNativeReflectConstruct = image_isNativeReflectConstruct(); return function _createSuperInternal() { var Super = _getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf(this).constructor; result = construct_default()(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
 
 function image_isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !(construct_default())) return false; if ((construct_default()).sham) return false; if (typeof Proxy === "function") return true; try { Boolean.prototype.valueOf.call(construct_default()(Boolean, [], function () {})); return true; } catch (e) { return false; } }
@@ -47520,9 +46995,7 @@ var image_Image = /*#__PURE__*/function (_Submenu) {
   }, {
     key: "addEvent",
     value: function addEvent(actions) {
-      var _context;
-
-      var loadImageFile = bind_default()(_context = this._loadImageFile).call(_context, this);
+      var loadImageFile = this._loadImageFile.bind(this);
 
       this.eventHandler = {
         loadImageFile: loadImageFile
@@ -47576,22 +47049,17 @@ var image_Image = /*#__PURE__*/function (_Submenu) {
 ;// CONCATENATED MODULE: ./src/js/ui/template/submenu/watermark.js
 
 
-
 /**
  * 根据menuParams生成动态模板字符串
  */
 function generateDynamicHtml(locale, menuParams) {
   if (menuParams.watermark && menuParams.watermark.defaultWatermark && menuParams.watermark.defaultWatermark.length > 0) {
-    var _context;
-
     var watermarkHtml = "\n      <li class=\"tui-image-editor-submenu-align\" style=\"width: 75%;margin-left: auto;margin-right: auto\">\n        <div class=\"watermark-title\">\n          ".concat(locale.localize('Default watermark'), "\n        </div>\n        <div class=\"watermark-default-img-box\">\n    ");
+    menuParams.watermark.defaultWatermark.forEach(function (watermark, index) {
+      var _context;
 
-    for_each_default()(_context = menuParams.watermark.defaultWatermark).call(_context, function (watermark, index) {
-      var _context2;
-
-      watermarkHtml += concat_default()(_context2 = "\n        <img class=\"watermark-default-img\" src=\"".concat(watermark, "\" alt=\"watermark ")).call(_context2, index, "\" />\n      ");
+      watermarkHtml += concat_default()(_context = "\n        <img class=\"watermark-default-img\" src=\"".concat(watermark, "\" alt=\"watermark ")).call(_context, index, "\" />\n      ");
     });
-
     watermarkHtml += "\n        </div>\n      </li>\n      <li class=\"tui-image-editor-partition only-left-right\">\n        <div></div>\n      </li>\n    ";
     return watermarkHtml;
   }
@@ -47608,16 +47076,14 @@ function generateDynamicHtml(locale, menuParams) {
 
 
 /* harmony default export */ var watermark = (function (_ref) {
-  var _context3, _context4, _context5, _context6;
+  var _context2, _context3, _context4, _context5;
 
   var locale = _ref.locale,
       makeSvgIcon = _ref.makeSvgIcon,
       menuParams = _ref.menuParams;
-  return concat_default()(_context3 = concat_default()(_context4 = concat_default()(_context5 = concat_default()(_context6 = "\n    <ul class=\"tui-image-editor-submenu-item\">\n        ".concat(generateDynamicHtml(locale, menuParams), "\n        <li class=\"tui-image-editor-submenu-align\" style=\"width: 75%;margin-left: auto;margin-right: auto\">\n          <div class=\"watermark-title\">\n            ")).call(_context6, locale.localize('Default location'), "\n          </div>\n          <table class=\"watermark-location-table\" border=\"1\">\n            <tr>\n              <td class=\"watermark-location\" data-origin-x=\"left\" data-origin-y=\"top\">\u5DE6\u4E0A</td>\n              <td class=\"watermark-location\" data-origin-x=\"center\" data-origin-y=\"top\">\u4E0A</td>\n              <td class=\"watermark-location\" data-origin-x=\"right\" data-origin-y=\"top\">\u53F3\u4E0A</td>\n            </tr>\n            <tr>\n              <td class=\"watermark-location\" data-origin-x=\"left\" data-origin-y=\"center\">\u5DE6\u4E2D</td>\n              <td class=\"watermark-location\" data-origin-x=\"center\" data-origin-y=\"center\">\u4E2D</td>\n              <td class=\"watermark-location\" data-origin-x=\"right\" data-origin-y=\"center\">\u53F3\u4E2D</td>\n            </tr>\n            <tr>\n              <td class=\"watermark-location\" data-origin-x=\"left\" data-origin-y=\"bottom\">\u5DE6\u4E0B</td>\n              <td class=\"watermark-location\" data-origin-x=\"center\" data-origin-y=\"bottom\">\u4E0B</td>\n              <td class=\"watermark-location watermark-location-active\" data-origin-x=\"right\" data-origin-y=\"bottom\">\u53F3\u4E0B</td>\n            </tr>\n          </table>\n        </li>\n        <li class=\"tui-image-editor-partition only-left-right\">\n          <div></div>\n        </li>\n        <li class=\"tui-image-editor-submenu-align\" style=\"width: 75%;margin-left: auto;margin-right: auto\">\n          <div class=\"watermark-title\">\n            ")).call(_context5, locale.localize('Watermark opacity'), "\n          </div>\n          <div class=\"watermark-opacity-box\">\n            <div class=\"watermark-opacity-range tui-image-editor-range\"></div>\n            <input class=\"watermark-opacity-value\" value=\"0\"/>\n          </div>\n        </li>\n        <li class=\"tui-image-editor-partition only-left-right\">\n          <div></div>\n        </li>\n        <li>\n            <div class=\"tui-image-editor-button\">\n                <div>\n                    <input type=\"file\" accept=\"image/*\" class=\"tie-watermark-file\">\n                    ")).call(_context4, makeSvgIcon(['normal', 'active'], 'icon-load', true), "\n                </div>\n                <label> ")).call(_context3, locale.localize('Add watermark'), " </label>\n            </div>\n        </li>\n    </ul>\n");
+  return concat_default()(_context2 = concat_default()(_context3 = concat_default()(_context4 = concat_default()(_context5 = "\n    <ul class=\"tui-image-editor-submenu-item\">\n        ".concat(generateDynamicHtml(locale, menuParams), "\n        <li class=\"tui-image-editor-submenu-align\" style=\"width: 75%;margin-left: auto;margin-right: auto\">\n          <div class=\"watermark-title\">\n            ")).call(_context5, locale.localize('Default location'), "\n          </div>\n          <table class=\"watermark-location-table\" border=\"1\">\n            <tr>\n              <td class=\"watermark-location\" data-origin-x=\"left\" data-origin-y=\"top\">\u5DE6\u4E0A</td>\n              <td class=\"watermark-location\" data-origin-x=\"center\" data-origin-y=\"top\">\u4E0A</td>\n              <td class=\"watermark-location\" data-origin-x=\"right\" data-origin-y=\"top\">\u53F3\u4E0A</td>\n            </tr>\n            <tr>\n              <td class=\"watermark-location\" data-origin-x=\"left\" data-origin-y=\"center\">\u5DE6\u4E2D</td>\n              <td class=\"watermark-location\" data-origin-x=\"center\" data-origin-y=\"center\">\u4E2D</td>\n              <td class=\"watermark-location\" data-origin-x=\"right\" data-origin-y=\"center\">\u53F3\u4E2D</td>\n            </tr>\n            <tr>\n              <td class=\"watermark-location\" data-origin-x=\"left\" data-origin-y=\"bottom\">\u5DE6\u4E0B</td>\n              <td class=\"watermark-location\" data-origin-x=\"center\" data-origin-y=\"bottom\">\u4E0B</td>\n              <td class=\"watermark-location watermark-location-active\" data-origin-x=\"right\" data-origin-y=\"bottom\">\u53F3\u4E0B</td>\n            </tr>\n          </table>\n        </li>\n        <li class=\"tui-image-editor-partition only-left-right\">\n          <div></div>\n        </li>\n        <li class=\"tui-image-editor-submenu-align\" style=\"width: 75%;margin-left: auto;margin-right: auto\">\n          <div class=\"watermark-title\">\n            ")).call(_context4, locale.localize('Watermark opacity'), "\n          </div>\n          <div class=\"watermark-opacity-box\">\n            <div class=\"watermark-opacity-range tui-image-editor-range\"></div>\n            <input class=\"watermark-opacity-value\" value=\"0\"/>\n          </div>\n        </li>\n        <li class=\"tui-image-editor-partition only-left-right\">\n          <div></div>\n        </li>\n        <li>\n            <div class=\"tui-image-editor-button\">\n                <div>\n                    <input type=\"file\" accept=\"image/*\" class=\"tie-watermark-file\">\n                    ")).call(_context3, makeSvgIcon(['normal', 'active'], 'icon-load', true), "\n                </div>\n                <label> ")).call(_context2, locale.localize('Add watermark'), " </label>\n            </div>\n        </li>\n    </ul>\n");
 });
 ;// CONCATENATED MODULE: ./src/js/ui/watermark.js
-
-
 
 
 
@@ -47700,15 +47166,13 @@ var Watermark = /*#__PURE__*/function (_Submenu) {
   }, {
     key: "addEvent",
     value: function addEvent(actions) {
-      var _context, _context2, _context3, _context4, _context7;
+      var loadImageFile = this._loadImageFile.bind(this);
 
-      var loadImageFile = bind_default()(_context = this._loadImageFile).call(_context, this);
+      var imageClickHandler = this._imageClickHandler.bind(this);
 
-      var imageClickHandler = bind_default()(_context2 = this._imageClickHandler).call(_context2, this);
+      var locationClickHandler = this._locationClickHandler.bind(this);
 
-      var locationClickHandler = bind_default()(_context3 = this._locationClickHandler).call(_context3, this);
-
-      var opacityChangeHandler = bind_default()(_context4 = this._opacityChangeHandler).call(_context4, this);
+      var opacityChangeHandler = this._opacityChangeHandler.bind(this);
 
       this.eventHandler = {
         loadImageFile: loadImageFile,
@@ -47721,22 +47185,18 @@ var Watermark = /*#__PURE__*/function (_Submenu) {
       this._els.imageButton.addEventListener('change', loadImageFile);
 
       if (this._els.images) {
-        var _context5;
-
-        for_each_default()(_context5 = this._els.images).call(_context5, function (image) {
+        this._els.images.forEach(function (image) {
           image.addEventListener('click', imageClickHandler);
         });
       }
 
       if (this._els.locations) {
-        var _context6;
-
-        for_each_default()(_context6 = this._els.locations).call(_context6, function (location) {
+        this._els.locations.forEach(function (location) {
           location.addEventListener('click', locationClickHandler);
         });
       }
 
-      this._els.opacityRange.on('change', bind_default()(_context7 = this._opacityChangeHandler).call(_context7, this));
+      this._els.opacityRange.on('change', this._opacityChangeHandler.bind(this));
     }
     /**
      * Remove event
@@ -47751,17 +47211,13 @@ var Watermark = /*#__PURE__*/function (_Submenu) {
       this._els.imageButton.removeEventListener('change', this.eventHandler.loadImageFile);
 
       if (this._els.images) {
-        var _context8;
-
-        for_each_default()(_context8 = this._els.images).call(_context8, function (image) {
+        this._els.images.forEach(function (image) {
           image.removeEventListener('click', _this2.eventHandler.imageClickHandler);
         });
       }
 
       if (this._els.locations) {
-        var _context9;
-
-        for_each_default()(_context9 = this._els.locations).call(_context9, function (location) {
+        this._els.locations.forEach(function (location) {
           location.removeEventListener('click', _this2.eventHandler.locationClickHandler);
         });
       }
@@ -47818,10 +47274,8 @@ var Watermark = /*#__PURE__*/function (_Submenu) {
   }, {
     key: "_locationClickHandler",
     value: function _locationClickHandler(e) {
-      var _context10;
-
       // 先取消所有的active
-      for_each_default()(_context10 = this._els.locations).call(_context10, function (location) {
+      this._els.locations.forEach(function (location) {
         location.classList.remove('watermark-location-active');
       }); // 设置当前点击的active
 
@@ -47865,8 +47319,6 @@ var Watermark = /*#__PURE__*/function (_Submenu) {
 
 /* harmony default export */ var ui_watermark = (Watermark);
 ;// CONCATENATED MODULE: ./src/js/ui.js
-
-
 
 
 
@@ -48172,8 +47624,6 @@ var Ui = /*#__PURE__*/function () {
       var _this = this;
 
       forEach_default()(this.options.menu, function (menuName) {
-        var _context;
-
         var SubComponentClass = SUB_UI_COMPONENT[menuName.replace(/^[a-z]/, function ($0) {
           return $0.toUpperCase();
         })]; // make menu element
@@ -48185,7 +47635,7 @@ var Ui = /*#__PURE__*/function () {
 
         _this[menuName] = new SubComponentClass(_this._subMenuElement, {
           locale: _this._locale,
-          makeSvgIcon: bind_default()(_context = _this.theme.makeMenSvgIconSet).call(_context, _this.theme),
+          makeSvgIcon: _this.theme.makeMenSvgIconSet.bind(_this.theme),
           menuBarPosition: _this.options.menuBarPosition,
           usageStatistics: _this.options.usageStatistics,
           menuParams: _this.options.menuParams
@@ -48200,11 +47650,9 @@ var Ui = /*#__PURE__*/function () {
   }, {
     key: "_attachHistoryEvent",
     value: function _attachHistoryEvent() {
-      var _context2, _context3, _context4;
-
-      this.on(eventNames.EXECUTE_COMMAND, bind_default()(_context2 = this._addHistory).call(_context2, this));
-      this.on(eventNames.AFTER_UNDO, bind_default()(_context3 = this._selectPrevHistory).call(_context3, this));
-      this.on(eventNames.AFTER_REDO, bind_default()(_context4 = this._selectNextHistory).call(_context4, this));
+      this.on(eventNames.EXECUTE_COMMAND, this._addHistory.bind(this));
+      this.on(eventNames.AFTER_UNDO, this._selectPrevHistory.bind(this));
+      this.on(eventNames.AFTER_REDO, this._selectNextHistory.bind(this));
     }
     /**
      * Attach zoom event
@@ -48234,8 +47682,6 @@ var Ui = /*#__PURE__*/function () {
   }, {
     key: "_makeUiElement",
     value: function _makeUiElement(element) {
-      var _context5;
-
       var selectedElement;
 
       if (element.nodeType) {
@@ -48280,7 +47726,7 @@ var Ui = /*#__PURE__*/function () {
 
       this._historyMenu = new ui_history(this._buttonElements[HISTORY_MENU], {
         locale: this._locale,
-        makeSvgIcon: bind_default()(_context5 = this.theme.makeMenSvgIconSet).call(_context5, this.theme)
+        makeSvgIcon: this.theme.makeMenSvgIconSet.bind(this.theme)
       });
 
       this._activateZoomMenus();
@@ -48308,9 +47754,9 @@ var Ui = /*#__PURE__*/function () {
   }, {
     key: "_makeHelpMenuWithPartition",
     value: function _makeHelpMenuWithPartition() {
-      var _context6;
+      var _context;
 
-      return concat_default()(_context6 = []).call(_context6, _toConsumableArray(ZOOM_HELP_MENUS), [''], _toConsumableArray(COMMAND_HELP_MENUS), [''], _toConsumableArray(DELETE_HELP_MENUS));
+      return concat_default()(_context = []).call(_context, _toConsumableArray(ZOOM_HELP_MENUS), [''], _toConsumableArray(COMMAND_HELP_MENUS), [''], _toConsumableArray(DELETE_HELP_MENUS));
     }
     /**
      * Add help menu
@@ -48361,7 +47807,7 @@ var Ui = /*#__PURE__*/function () {
   }, {
     key: "_makeMenuElement",
     value: function _makeMenuElement(menuName) {
-      var _context7, _context8;
+      var _context2, _context3;
 
       var useIconTypes = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : ['normal', 'active', 'hover'];
       var menuType = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 'normal';
@@ -48370,7 +47816,7 @@ var Ui = /*#__PURE__*/function () {
 
       this._addTooltipAttribute(btnElement, menuName);
 
-      btnElement.className = concat_default()(_context7 = concat_default()(_context8 = "tie-btn-".concat(menuName, " ")).call(_context8, cls('item'), " ")).call(_context7, menuType);
+      btnElement.className = concat_default()(_context2 = concat_default()(_context3 = "tie-btn-".concat(menuName, " ")).call(_context3, cls('item'), " ")).call(_context2, menuType);
       btnElement.innerHTML = menuItemHtml;
 
       if (menuType === 'normal') {
@@ -48823,11 +48269,8 @@ var Ui = /*#__PURE__*/function () {
       var _this$_editorContaine = this._editorContainerElement.style,
           maxWidth = _this$_editorContaine.maxWidth,
           maxHeight = _this$_editorContaine.maxHeight;
-
-      var width = parse_float_default()(maxWidth);
-
-      var height = parse_float_default()(maxHeight);
-
+      var width = parseFloat(maxWidth);
+      var height = parseFloat(maxHeight);
       return {
         width: width,
         height: height
@@ -50334,8 +49777,6 @@ var ImageTracer = /*#__PURE__*/function () {
 
 
 
-
-
 /* harmony default export */ var action = ({
   /**
    * Get ui actions
@@ -51037,8 +50478,6 @@ var ImageTracer = /*#__PURE__*/function () {
 
       /* eslint-disable complexity */
       objectActivated: function objectActivated(obj) {
-        var _context, _context2;
-
         _this14.activeObjectId = obj.id;
 
         _this14.ui.changeHelpButtonEnabled('delete', true);
@@ -51047,7 +50486,7 @@ var ImageTracer = /*#__PURE__*/function () {
 
         if (obj.type === 'cropzone') {
           _this14.ui.crop.changeApplyButtonStatus(true);
-        } else if (index_of_default()(_context = ['rect', 'circle', 'triangle']).call(_context, obj.type) > -1) {
+        } else if (['rect', 'circle', 'triangle'].indexOf(obj.type) > -1) {
           _this14.stopDrawingMode();
 
           if (_this14.ui.submenu !== 'shape') {
@@ -51067,7 +50506,7 @@ var ImageTracer = /*#__PURE__*/function () {
 
             _this14.ui.draw.changeStandbyMode();
           }
-        } else if (index_of_default()(_context2 = ['i-text', 'text']).call(_context2, obj.type) > -1) {
+        } else if (['i-text', 'text'].indexOf(obj.type) > -1) {
           if (_this14.ui.submenu !== 'text') {
             _this14.ui.changeMenu('text', false, false);
           }
@@ -51115,22 +50554,18 @@ var ImageTracer = /*#__PURE__*/function () {
         });
       },
       addObjectAfter: function addObjectAfter(obj) {
-        var _context3;
-
         if (obj.type === 'icon') {
           _this14.ui.icon.changeStandbyMode();
-        } else if (index_of_default()(_context3 = ['rect', 'circle', 'triangle']).call(_context3, obj.type) > -1) {
+        } else if (['rect', 'circle', 'triangle'].indexOf(obj.type) > -1) {
           _this14.ui.shape.setMaxStrokeValue(Math.min(obj.width, obj.height));
 
           _this14.ui.shape.changeStandbyMode();
         }
       },
       objectScaled: function objectScaled(obj) {
-        var _context4, _context5;
-
-        if (index_of_default()(_context4 = ['i-text', 'text']).call(_context4, obj.type) > -1) {
+        if (['i-text', 'text'].indexOf(obj.type) > -1) {
           _this14.ui.text.fontSize = toInteger(obj.fontSize);
-        } else if (index_of_default()(_context5 = ['rect', 'circle', 'triangle']).call(_context5, obj.type) >= 0) {
+        } else if (['rect', 'circle', 'triangle'].indexOf(obj.type) >= 0) {
           var width = obj.width,
               height = obj.height;
 
@@ -51181,11 +50616,7 @@ var ImageTracer = /*#__PURE__*/function () {
    * @private
    */
   _commonAction: function _commonAction() {
-    var _this16 = this,
-        _context6,
-        _context7,
-        _context8,
-        _context9;
+    var _this16 = this;
 
     var TEXT = drawingModes.TEXT,
         CROPPER = drawingModes.CROPPER,
@@ -51226,10 +50657,10 @@ var ImageTracer = /*#__PURE__*/function () {
             break;
         }
       },
-      deactivateAll: bind_default()(_context6 = this.deactivateAll).call(_context6, this),
-      changeSelectableAll: bind_default()(_context7 = this.changeSelectableAll).call(_context7, this),
-      discardSelection: bind_default()(_context8 = this.discardSelection).call(_context8, this),
-      stopDrawingMode: bind_default()(_context9 = this.stopDrawingMode).call(_context9, this)
+      deactivateAll: this.deactivateAll.bind(this),
+      changeSelectableAll: this.changeSelectableAll.bind(this),
+      discardSelection: this.discardSelection.bind(this),
+      stopDrawingMode: this.stopDrawingMode.bind(this)
     };
   },
 
@@ -51241,11 +50672,11 @@ var ImageTracer = /*#__PURE__*/function () {
     extend_default()(ImageEditor.prototype, this);
   }
 });
-// EXTERNAL MODULE: ./node_modules/tui-code-snippet/type/isArray.js
-var isArray = __webpack_require__(602);
+// EXTERNAL MODULE: ../../node_modules/tui-code-snippet/type/isArray.js
+var isArray = __webpack_require__(7322);
 var isArray_default = /*#__PURE__*/__webpack_require__.n(isArray);
-// EXTERNAL MODULE: ./node_modules/tui-code-snippet/collection/forEachOwnProperties.js
-var forEachOwnProperties = __webpack_require__(5573);
+// EXTERNAL MODULE: ../../node_modules/tui-code-snippet/collection/forEachOwnProperties.js
+var forEachOwnProperties = __webpack_require__(6956);
 var forEachOwnProperties_default = /*#__PURE__*/__webpack_require__.n(forEachOwnProperties);
 ;// CONCATENATED MODULE: ./src/js/interface/component.js
 
@@ -51532,8 +50963,6 @@ var ImageLoader = /*#__PURE__*/function (_Component) {
 
 
 
-
-
 var CORNER_TYPE_TOP_LEFT = 'tl';
 var CORNER_TYPE_TOP_RIGHT = 'tr';
 var CORNER_TYPE_MIDDLE_TOP = 'mt';
@@ -51554,7 +50983,7 @@ var NOOP_FUNCTION = function NOOP_FUNCTION() {};
 
 
 function cornerTypeValid(selectedCorner) {
-  return index_of_default()(CORNER_TYPE_LIST).call(CORNER_TYPE_LIST, selectedCorner) >= 0;
+  return CORNER_TYPE_LIST.indexOf(selectedCorner) >= 0;
 }
 /**
  * return scale basis type
@@ -51599,14 +51028,12 @@ var Cropzone = fabric.fabric.util.createClass(fabric.fabric.Rect,
     this.options = options;
   },
   canvasEventDelegation: function canvasEventDelegation(eventName) {
-    var _context;
-
     var delegationState = 'unregistered';
     var isRegistered = this.canvasEventTrigger[eventName] !== NOOP_FUNCTION;
 
     if (isRegistered) {
       delegationState = 'registered';
-    } else if (index_of_default()(_context = [eventNames.OBJECT_MOVED, eventNames.OBJECT_SCALED]).call(_context, eventName) < 0) {
+    } else if ([eventNames.OBJECT_MOVED, eventNames.OBJECT_SCALED].indexOf(eventName) < 0) {
       delegationState = 'none';
     }
 
@@ -51616,15 +51043,15 @@ var Cropzone = fabric.fabric.util.createClass(fabric.fabric.Rect,
     this.canvasEventTrigger[eventName] = eventTrigger;
   },
   _addEventHandler: function _addEventHandler() {
-    var _this$canvasEventTrig, _context2, _context3, _context4, _context5;
+    var _this$canvasEventTrig;
 
     this.canvasEventTrigger = (_this$canvasEventTrig = {}, _defineProperty(_this$canvasEventTrig, eventNames.OBJECT_MOVED, NOOP_FUNCTION), _defineProperty(_this$canvasEventTrig, eventNames.OBJECT_SCALED, NOOP_FUNCTION), _this$canvasEventTrig);
     this.on({
-      moving: bind_default()(_context2 = this._onMoving).call(_context2, this),
-      scaling: bind_default()(_context3 = this._onScaling).call(_context3, this)
+      moving: this._onMoving.bind(this),
+      scaling: this._onScaling.bind(this)
     });
-    fabric.fabric.util.addListener(document, 'keydown', bind_default()(_context4 = this._onKeyDown).call(_context4, this));
-    fabric.fabric.util.addListener(document, 'keyup', bind_default()(_context5 = this._onKeyUp).call(_context5, this));
+    fabric.fabric.util.addListener(document, 'keydown', this._onKeyDown.bind(this));
+    fabric.fabric.util.addListener(document, 'keyup', this._onKeyUp.bind(this));
   },
   _renderCropzone: function _renderCropzone(ctx) {
     var cropzoneDashLineWidth = 7;
@@ -51780,7 +51207,7 @@ var Cropzone = fabric.fabric.util.createClass(fabric.fabric.Rect,
    * @private
    */
   _getCoordinates: function _getCoordinates() {
-    var _context6, _context7;
+    var _context, _context2;
 
     var canvas = this.canvas,
         width = this.width,
@@ -51794,16 +51221,16 @@ var Cropzone = fabric.fabric.util.createClass(fabric.fabric.Rect,
     var canvasWidth = canvas.getWidth(); // fabric object
 
     return {
-      x: map_default()(_context6 = [-(halfWidth + left), // x0
+      x: map_default()(_context = [-(halfWidth + left), // x0
       -halfWidth, // x1
       halfWidth, // x2
       halfWidth + (canvasWidth - left - width) // x3
-      ]).call(_context6, Math.ceil),
-      y: map_default()(_context7 = [-(halfHeight + top), // y0
+      ]).call(_context, Math.ceil),
+      y: map_default()(_context2 = [-(halfHeight + top), // y0
       -halfHeight, // y1
       halfHeight, // y2
       halfHeight + (canvasHeight - top - height) // y3
-      ]).call(_context7, Math.ceil)
+      ]).call(_context2, Math.ceil)
     };
   },
 
@@ -51940,9 +51367,9 @@ var Cropzone = fabric.fabric.util.createClass(fabric.fabric.Rect,
     var maxScaleFactor = Math.min(maxWidth / width, maxHeight / height);
 
     if (maxScaleFactor <= 1) {
-      var _context8;
+      var _context3;
 
-      var _map = map_default()(_context8 = [width, height]).call(_context8, function (v) {
+      var _map = map_default()(_context3 = [width, height]).call(_context3, function (v) {
         return v * maxScaleFactor;
       });
 
@@ -52164,7 +51591,6 @@ var Cropzone = fabric.fabric.util.createClass(fabric.fabric.Rect,
 
 
 
-
 function cropper_createSuper(Derived) { var hasNativeReflectConstruct = cropper_isNativeReflectConstruct(); return function _createSuperInternal() { var Super = _getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf(this).constructor; result = construct_default()(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
 
 function cropper_isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !(construct_default())) return false; if ((construct_default()).sham) return false; if (typeof Proxy === "function") return true; try { Boolean.prototype.valueOf.call(construct_default()(Boolean, [], function () {})); return true; } catch (e) { return false; } }
@@ -52197,8 +51623,6 @@ var Cropper = /*#__PURE__*/function (_Component) {
   var _super = cropper_createSuper(Cropper);
 
   function Cropper(graphics) {
-    var _context, _context2, _context3, _context4, _context5;
-
     var _this;
 
     _classCallCheck(this, Cropper);
@@ -52239,11 +51663,11 @@ var Cropper = /*#__PURE__*/function (_Component) {
      */
 
     _this._listeners = {
-      keydown: bind_default()(_context = _this._onKeyDown).call(_context, _assertThisInitialized(_this)),
-      keyup: bind_default()(_context2 = _this._onKeyUp).call(_context2, _assertThisInitialized(_this)),
-      mousedown: bind_default()(_context3 = _this._onFabricMouseDown).call(_context3, _assertThisInitialized(_this)),
-      mousemove: bind_default()(_context4 = _this._onFabricMouseMove).call(_context4, _assertThisInitialized(_this)),
-      mouseup: bind_default()(_context5 = _this._onFabricMouseUp).call(_context5, _assertThisInitialized(_this))
+      keydown: _this._onKeyDown.bind(_assertThisInitialized(_this)),
+      keyup: _this._onKeyUp.bind(_assertThisInitialized(_this)),
+      mousedown: _this._onFabricMouseDown.bind(_assertThisInitialized(_this)),
+      mousemove: _this._onFabricMouseMove.bind(_assertThisInitialized(_this)),
+      mouseup: _this._onFabricMouseUp.bind(_assertThisInitialized(_this))
     };
     return _this;
   }
@@ -52549,7 +51973,7 @@ var Cropper = /*#__PURE__*/function (_Component) {
   }, {
     key: "_getPresetPropertiesForCropSize",
     value: function _getPresetPropertiesForCropSize(presetRatio) {
-      var _context6, _context7;
+      var _context, _context2;
 
       var canvas = this.getCanvas();
       var originalWidth = canvas.getWidth();
@@ -52564,7 +51988,7 @@ var Cropper = /*#__PURE__*/function (_Component) {
       var height = standardSize;
       var scaleWidth = getScale(width, originalWidth);
 
-      var _map = map_default()(_context6 = [width, height]).call(_context6, function (sizeValue) {
+      var _map = map_default()(_context = [width, height]).call(_context, function (sizeValue) {
         return sizeValue * scaleWidth;
       });
 
@@ -52574,7 +51998,7 @@ var Cropper = /*#__PURE__*/function (_Component) {
       height = _map2[1];
       var scaleHeight = getScale(height, originalHeight);
 
-      var _map3 = map_default()(_context7 = [width, height]).call(_context7, function (sizeValue) {
+      var _map3 = map_default()(_context2 = [width, height]).call(_context2, function (sizeValue) {
         return fixFloatingPoint(sizeValue * scaleHeight);
       });
 
@@ -52623,7 +52047,6 @@ var Cropper = /*#__PURE__*/function (_Component) {
 
 /* harmony default export */ var cropper = (Cropper);
 ;// CONCATENATED MODULE: ./src/js/component/flip.js
-
 
 
 
@@ -52722,7 +52145,7 @@ var flip_Flip = /*#__PURE__*/function (_Component) {
         angle *= -1;
       }
 
-      canvasImage.rotate(parse_float_default()(angle)).setCoords(); // parseFloat for -0 to 0
+      canvasImage.rotate(parseFloat(angle)).setCoords(); // parseFloat for -0 to 0
     }
     /**
      * Flip objects
@@ -52739,7 +52162,7 @@ var flip_Flip = /*#__PURE__*/function (_Component) {
       if (isChangingFlipX) {
         canvas.forEachObject(function (obj) {
           obj.set({
-            angle: parse_float_default()(obj.angle * -1),
+            angle: parseFloat(obj.angle * -1),
             // parseFloat for -0 to 0
             flipX: !obj.flipX,
             left: canvas.width - obj.left
@@ -52750,7 +52173,7 @@ var flip_Flip = /*#__PURE__*/function (_Component) {
       if (isChangingFlipY) {
         canvas.forEachObject(function (obj) {
           obj.set({
-            angle: parse_float_default()(obj.angle * -1),
+            angle: parseFloat(obj.angle * -1),
             // parseFloat for -0 to 0
             flipY: !obj.flipY,
             top: canvas.height - obj.top
@@ -53234,7 +52657,6 @@ var ArrowLine = fabric.fabric.util.createClass(fabric.fabric.Line,
 
 
 
-
 function line_createSuper(Derived) { var hasNativeReflectConstruct = line_isNativeReflectConstruct(); return function _createSuperInternal() { var Super = _getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf(this).constructor; result = construct_default()(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
 
 function line_isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !(construct_default())) return false; if ((construct_default()).sham) return false; if (typeof Proxy === "function") return true; try { Boolean.prototype.valueOf.call(construct_default()(Boolean, [], function () {})); return true; } catch (e) { return false; } }
@@ -53258,8 +52680,6 @@ var Line = /*#__PURE__*/function (_Component) {
   var _super = line_createSuper(Line);
 
   function Line(graphics) {
-    var _context, _context2, _context3;
-
     var _this;
 
     _classCallCheck(this, Line);
@@ -53286,9 +52706,9 @@ var Line = /*#__PURE__*/function (_Component) {
      */
 
     _this._listeners = {
-      mousedown: bind_default()(_context = _this._onFabricMouseDown).call(_context, _assertThisInitialized(_this)),
-      mousemove: bind_default()(_context2 = _this._onFabricMouseMove).call(_context2, _assertThisInitialized(_this)),
-      mouseup: bind_default()(_context3 = _this._onFabricMouseUp).call(_context3, _assertThisInitialized(_this))
+      mousedown: _this._onFabricMouseDown.bind(_assertThisInitialized(_this)),
+      mousemove: _this._onFabricMouseMove.bind(_assertThisInitialized(_this)),
+      mouseup: _this._onFabricMouseUp.bind(_assertThisInitialized(_this))
     };
     return _this;
   }
@@ -53478,9 +52898,6 @@ var Line = /*#__PURE__*/function (_Component) {
 
 
 
-
-
-
 function component_text_createSuper(Derived) { var hasNativeReflectConstruct = component_text_isNativeReflectConstruct(); return function _createSuperInternal() { var Super = _getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf(this).constructor; result = construct_default()(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
 
 function component_text_isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !(construct_default())) return false; if ((construct_default()).sham) return false; if (typeof Proxy === "function") return true; try { Boolean.prototype.valueOf.call(construct_default()(Boolean, [], function () {})); return true; } catch (e) { return false; } }
@@ -53519,8 +52936,6 @@ var text_Text = /*#__PURE__*/function (_Component) {
   var _super = component_text_createSuper(Text);
 
   function Text(graphics) {
-    var _context, _context2, _context3, _context4, _context5;
-
     var _this;
 
     _classCallCheck(this, Text);
@@ -53556,11 +52971,11 @@ var text_Text = /*#__PURE__*/function (_Component) {
      */
 
     _this._listeners = {
-      mousedown: bind_default()(_context = _this._onFabricMouseDown).call(_context, _assertThisInitialized(_this)),
-      select: bind_default()(_context2 = _this._onFabricSelect).call(_context2, _assertThisInitialized(_this)),
-      selectClear: bind_default()(_context3 = _this._onFabricSelectClear).call(_context3, _assertThisInitialized(_this)),
-      scaling: bind_default()(_context4 = _this._onFabricScaling).call(_context4, _assertThisInitialized(_this)),
-      textChanged: bind_default()(_context5 = _this._onFabricTextChanged).call(_context5, _assertThisInitialized(_this))
+      mousedown: _this._onFabricMouseDown.bind(_assertThisInitialized(_this)),
+      select: _this._onFabricSelect.bind(_assertThisInitialized(_this)),
+      selectClear: _this._onFabricSelectClear.bind(_assertThisInitialized(_this)),
+      scaling: _this._onFabricScaling.bind(_assertThisInitialized(_this)),
+      textChanged: _this._onFabricTextChanged.bind(_assertThisInitialized(_this))
     };
     /**
      * Textarea element for editing
@@ -53704,8 +53119,6 @@ var text_Text = /*#__PURE__*/function (_Component) {
       var _this4 = this;
 
       return new (promise_default())(function (resolve) {
-        var _context6;
-
         var canvas = _this4.getCanvas();
 
         var newText = null;
@@ -53729,7 +53142,7 @@ var text_Text = /*#__PURE__*/function (_Component) {
         });
         newText.set(selectionStyle);
         newText.on({
-          mouseup: bind_default()(_context6 = _this4._onFabricMouseUp).call(_context6, _this4)
+          mouseup: _this4._onFabricMouseUp.bind(_this4)
         });
         canvas.add(newText);
 
@@ -53854,9 +53267,7 @@ var text_Text = /*#__PURE__*/function (_Component) {
     key: "setCanvasRatio",
     value: function setCanvasRatio() {
       var canvasElement = this.getCanvasElement();
-
-      var cssWidth = parse_int_default()(canvasElement.style.maxWidth, 10);
-
+      var cssWidth = parseInt(canvasElement.style.maxWidth, 10);
       var originWidth = canvasElement.width;
       this._ratio = originWidth / cssWidth;
     }
@@ -53925,8 +53336,7 @@ var text_Text = /*#__PURE__*/function (_Component) {
       var ratio = this.getCanvasRatio();
       var obj = this._editingObj;
       var textareaStyle = this._textarea.style;
-
-      set_timeout_default()(function () {
+      setTimeout(function () {
         obj.text(_this7._textarea.value);
         textareaStyle.width = "".concat(Math.ceil(obj.width / ratio), "px");
         textareaStyle.height = "".concat(Math.ceil(obj.height / ratio), "px");
@@ -54135,7 +53545,6 @@ var text_Text = /*#__PURE__*/function (_Component) {
 
 
 
-
 function component_icon_createSuper(Derived) { var hasNativeReflectConstruct = component_icon_isNativeReflectConstruct(); return function _createSuperInternal() { var Super = _getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf(this).constructor; result = construct_default()(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
 
 function component_icon_isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !(construct_default())) return false; if ((construct_default()).sham) return false; if (typeof Proxy === "function") return true; try { Boolean.prototype.valueOf.call(construct_default()(Boolean, [], function () {})); return true; } catch (e) { return false; } }
@@ -54163,8 +53572,6 @@ var icon_Icon = /*#__PURE__*/function (_Component) {
   var _super = component_icon_createSuper(Icon);
 
   function Icon(graphics) {
-    var _context, _context2, _context3;
-
     var _this;
 
     _classCallCheck(this, Icon);
@@ -54203,9 +53610,9 @@ var icon_Icon = /*#__PURE__*/function (_Component) {
      */
 
     _this._handlers = {
-      mousedown: bind_default()(_context = _this._onFabricMouseDown).call(_context, _assertThisInitialized(_this)),
-      mousemove: bind_default()(_context2 = _this._onFabricMouseMove).call(_context2, _assertThisInitialized(_this)),
-      mouseup: bind_default()(_context3 = _this._onFabricMouseUp).call(_context3, _assertThisInitialized(_this))
+      mousedown: _this._onFabricMouseDown.bind(_assertThisInitialized(_this)),
+      mousemove: _this._onFabricMouseMove.bind(_assertThisInitialized(_this)),
+      mouseup: _this._onFabricMouseUp.bind(_assertThisInitialized(_this))
     };
     return _this;
   }
@@ -55619,7 +55026,6 @@ function shape_isNativeReflectConstruct() { if (typeof Reflect === "undefined" |
 
 
 
-
 var SHAPE_INIT_OPTIONS = extend_default()({
   strokeWidth: 1,
   stroke: '#000000',
@@ -55679,8 +55085,6 @@ var shape_Shape = /*#__PURE__*/function (_Component) {
   var _super = shape_createSuper(Shape);
 
   function Shape(graphics) {
-    var _context, _context2, _context3, _context4, _context5;
-
     var _this;
 
     _classCallCheck(this, Shape);
@@ -55735,11 +55139,11 @@ var shape_Shape = /*#__PURE__*/function (_Component) {
      */
 
     _this._handlers = {
-      mousedown: bind_default()(_context = _this._onFabricMouseDown).call(_context, _assertThisInitialized(_this)),
-      mousemove: bind_default()(_context2 = _this._onFabricMouseMove).call(_context2, _assertThisInitialized(_this)),
-      mouseup: bind_default()(_context3 = _this._onFabricMouseUp).call(_context3, _assertThisInitialized(_this)),
-      keydown: bind_default()(_context4 = _this._onKeyDown).call(_context4, _assertThisInitialized(_this)),
-      keyup: bind_default()(_context5 = _this._onKeyUp).call(_context5, _assertThisInitialized(_this))
+      mousedown: _this._onFabricMouseDown.bind(_assertThisInitialized(_this)),
+      mousemove: _this._onFabricMouseMove.bind(_assertThisInitialized(_this)),
+      mouseup: _this._onFabricMouseUp.bind(_assertThisInitialized(_this)),
+      keydown: _this._onKeyDown.bind(_assertThisInitialized(_this)),
+      keyup: _this._onKeyUp.bind(_assertThisInitialized(_this))
     };
     return _this;
   }
@@ -56251,8 +55655,6 @@ var shape_Shape = /*#__PURE__*/function (_Component) {
 
 
 
-
-
 function zoom_createSuper(Derived) { var hasNativeReflectConstruct = zoom_isNativeReflectConstruct(); return function _createSuperInternal() { var Super = _getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf(this).constructor; result = construct_default()(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
 
 function zoom_isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !(construct_default())) return false; if ((construct_default()).sham) return false; if (typeof Proxy === "function") return true; try { Boolean.prototype.valueOf.call(construct_default()(Boolean, [], function () {})); return true; } catch (e) { return false; } }
@@ -56308,8 +55710,6 @@ var Zoom = /*#__PURE__*/function (_Component) {
   var _super = zoom_createSuper(Zoom);
 
   function Zoom(graphics) {
-    var _context, _context2, _context3, _context4, _context5, _context6, _context7, _context8, _context9, _context10, _context11, _context12;
-
     var _this;
 
     _classCallCheck(this, Zoom);
@@ -56353,15 +55753,15 @@ var Zoom = /*#__PURE__*/function (_Component) {
      */
 
     _this._listeners = {
-      startZoom: bind_default()(_context = _this._onMouseDownWithZoomMode).call(_context, _assertThisInitialized(_this)),
-      moveZoom: bind_default()(_context2 = _this._onMouseMoveWithZoomMode).call(_context2, _assertThisInitialized(_this)),
-      stopZoom: bind_default()(_context3 = _this._onMouseUpWithZoomMode).call(_context3, _assertThisInitialized(_this)),
-      startHand: bind_default()(_context4 = _this._onMouseDownWithHandMode).call(_context4, _assertThisInitialized(_this)),
-      moveHand: bind_default()(_context5 = _this._onMouseMoveWithHandMode).call(_context5, _assertThisInitialized(_this)),
-      stopHand: bind_default()(_context6 = _this._onMouseUpWithHandMode).call(_context6, _assertThisInitialized(_this)),
-      zoomChanged: bind_default()(_context7 = _this._changeScrollState).call(_context7, _assertThisInitialized(_this)),
-      keydown: bind_default()(_context8 = _this._startHandModeWithSpaceBar).call(_context8, _assertThisInitialized(_this)),
-      keyup: bind_default()(_context9 = _this._endHandModeWithSpaceBar).call(_context9, _assertThisInitialized(_this))
+      startZoom: _this._onMouseDownWithZoomMode.bind(_assertThisInitialized(_this)),
+      moveZoom: _this._onMouseMoveWithZoomMode.bind(_assertThisInitialized(_this)),
+      stopZoom: _this._onMouseUpWithZoomMode.bind(_assertThisInitialized(_this)),
+      startHand: _this._onMouseDownWithHandMode.bind(_assertThisInitialized(_this)),
+      moveHand: _this._onMouseMoveWithHandMode.bind(_assertThisInitialized(_this)),
+      stopHand: _this._onMouseUpWithHandMode.bind(_assertThisInitialized(_this)),
+      zoomChanged: _this._changeScrollState.bind(_assertThisInitialized(_this)),
+      keydown: _this._startHandModeWithSpaceBar.bind(_assertThisInitialized(_this)),
+      keyup: _this._endHandModeWithSpaceBar.bind(_assertThisInitialized(_this))
     };
 
     var canvas = _this.getCanvas();
@@ -56388,11 +55788,11 @@ var Zoom = /*#__PURE__*/function (_Component) {
     _this._horizontalScroll = new fabric.fabric.Rect(DEFAULT_SCROLL_OPTION);
     canvas.on(ZOOM_CHANGED, _this._listeners.zoomChanged);
 
-    _this.graphics.on(ADD_TEXT, bind_default()(_context10 = _this._startTextEditingHandler).call(_context10, _assertThisInitialized(_this)));
+    _this.graphics.on(ADD_TEXT, _this._startTextEditingHandler.bind(_assertThisInitialized(_this)));
 
-    _this.graphics.on(TEXT_EDITING, bind_default()(_context11 = _this._startTextEditingHandler).call(_context11, _assertThisInitialized(_this)));
+    _this.graphics.on(TEXT_EDITING, _this._startTextEditingHandler.bind(_assertThisInitialized(_this)));
 
-    _this.graphics.on(OBJECT_MODIFIED, bind_default()(_context12 = _this._stopTextEditingHandler).call(_context12, _assertThisInitialized(_this)));
+    _this.graphics.on(OBJECT_MODIFIED, _this._stopTextEditingHandler.bind(_assertThisInitialized(_this)));
 
     return _this;
   }
@@ -57066,7 +56466,7 @@ var Zoom = /*#__PURE__*/function (_Component) {
         clearTimeout(this.scrollBarTid);
       }
 
-      this.scrollBarTid = set_timeout_default()(function () {
+      this.scrollBarTid = setTimeout(function () {
         canvas.remove(_this2._horizontalScroll);
         canvas.remove(_this2._verticalScroll);
       }, 3000);
@@ -57940,8 +57340,6 @@ var ResizeDrawingMode = /*#__PURE__*/function (_DrawingMode) {
 
 
 
-
-
 var DEFAULT_CSS_MAX_WIDTH = 1000;
 var DEFAULT_CSS_MAX_HEIGHT = 800;
 var EXTRA_PX_FOR_PASTE = 10;
@@ -57963,8 +57361,6 @@ var backstoreOnly = {
 
 var Graphics = /*#__PURE__*/function () {
   function Graphics(element) {
-    var _context, _context2, _context3, _context4, _context5, _context6, _context7, _context8, _context9, _context10, _context11;
-
     var _ref = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {},
         cssMaxWidth = _ref.cssMaxWidth,
         cssMaxHeight = _ref.cssMaxHeight;
@@ -58049,17 +57445,17 @@ var Graphics = /*#__PURE__*/function () {
      */
 
     this._handler = {
-      onMouseDown: bind_default()(_context = this._onMouseDown).call(_context, this),
-      onObjectAdded: bind_default()(_context2 = this._onObjectAdded).call(_context2, this),
-      onObjectRemoved: bind_default()(_context3 = this._onObjectRemoved).call(_context3, this),
-      onObjectMoved: bind_default()(_context4 = this._onObjectMoved).call(_context4, this),
-      onObjectScaled: bind_default()(_context5 = this._onObjectScaled).call(_context5, this),
-      onObjectModified: bind_default()(_context6 = this._onObjectModified).call(_context6, this),
-      onObjectRotated: bind_default()(_context7 = this._onObjectRotated).call(_context7, this),
-      onObjectSelected: bind_default()(_context8 = this._onObjectSelected).call(_context8, this),
-      onPathCreated: bind_default()(_context9 = this._onPathCreated).call(_context9, this),
-      onSelectionCleared: bind_default()(_context10 = this._onSelectionCleared).call(_context10, this),
-      onSelectionCreated: bind_default()(_context11 = this._onSelectionCreated).call(_context11, this)
+      onMouseDown: this._onMouseDown.bind(this),
+      onObjectAdded: this._onObjectAdded.bind(this),
+      onObjectRemoved: this._onObjectRemoved.bind(this),
+      onObjectMoved: this._onObjectMoved.bind(this),
+      onObjectScaled: this._onObjectScaled.bind(this),
+      onObjectModified: this._onObjectModified.bind(this),
+      onObjectRotated: this._onObjectRotated.bind(this),
+      onObjectSelected: this._onObjectSelected.bind(this),
+      onPathCreated: this._onPathCreated.bind(this),
+      onSelectionCleared: this._onSelectionCleared.bind(this),
+      onSelectionCreated: this._onSelectionCreated.bind(this)
     };
 
     this._setObjectCachingToFalse();
@@ -58173,9 +57569,9 @@ var Graphics = /*#__PURE__*/function () {
   }, {
     key: "getObjects",
     value: function getObjects() {
-      var _context12;
+      var _context;
 
-      return slice_default()(_context12 = this._canvas.getObjects()).call(_context12);
+      return slice_default()(_context = this._canvas.getObjects()).call(_context);
     }
     /**
      * Get an object by id
@@ -58207,11 +57603,11 @@ var Graphics = /*#__PURE__*/function () {
   }, {
     key: "removeAll",
     value: function removeAll(includesBackground) {
-      var _context13;
+      var _context2;
 
       var canvas = this._canvas;
 
-      var objects = slice_default()(_context13 = canvas.getObjects()).call(_context13);
+      var objects = slice_default()(_context2 = canvas.getObjects()).call(_context2);
 
       canvas.remove.apply(canvas, _toConsumableArray(this._canvas.getObjects()));
 
@@ -58702,14 +58098,13 @@ var Graphics = /*#__PURE__*/function () {
   }, {
     key: "addImageObject",
     value: function addImageObject(imgUrl) {
-      var _context14,
-          _this = this;
+      var _this = this;
 
       var originX = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'center';
       var originY = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 'center';
       var type = arguments.length > 3 ? arguments[3] : undefined;
 
-      var callback = bind_default()(_context14 = this._callbackAfterLoadingImageObject).call(_context14, this);
+      var callback = this._callbackAfterLoadingImageObject.bind(this);
 
       return new (promise_default())(function (resolve) {
         fabric.fabric.Image.fromURL(imgUrl, function (image) {
@@ -59338,8 +58733,7 @@ var Graphics = /*#__PURE__*/function () {
 
       if (target.type === 'activeSelection') {
         var items = target.getObjects();
-
-        for_each_default()(items).call(items, function (item) {
+        items.forEach(function (item) {
           return item.fire('modifiedInGroup', target);
         });
       }
@@ -59751,7 +59145,6 @@ customEvents_default().mixin(Graphics);
 
 
 
-
 var MOUSE_DOWN = eventNames.MOUSE_DOWN,
     OBJECT_MOVED = eventNames.OBJECT_MOVED,
     OBJECT_SCALED = eventNames.OBJECT_SCALED,
@@ -59894,8 +59287,6 @@ var MOUSE_DOWN = eventNames.MOUSE_DOWN,
 
 var ImageEditor = /*#__PURE__*/function () {
   function ImageEditor(wrapper, options) {
-    var _context, _context2, _context3, _context4, _context5, _context6, _context7, _context8, _context9, _context10, _context11, _context12, _context13, _context14, _context15, _context16;
-
     _classCallCheck(this, ImageEditor);
 
     options = extend_default()({
@@ -59940,23 +59331,23 @@ var ImageEditor = /*#__PURE__*/function () {
      */
 
     this._handlers = {
-      keydown: bind_default()(_context = this._onKeyDown).call(_context, this),
-      mousedown: bind_default()(_context2 = this._onMouseDown).call(_context2, this),
-      objectActivated: bind_default()(_context3 = this._onObjectActivated).call(_context3, this),
-      objectMoved: bind_default()(_context4 = this._onObjectMoved).call(_context4, this),
-      objectScaled: bind_default()(_context5 = this._onObjectScaled).call(_context5, this),
-      objectRotated: bind_default()(_context6 = this._onObjectRotated).call(_context6, this),
-      objectAdded: bind_default()(_context7 = this._onObjectAdded).call(_context7, this),
-      objectModified: bind_default()(_context8 = this._onObjectModified).call(_context8, this),
+      keydown: this._onKeyDown.bind(this),
+      mousedown: this._onMouseDown.bind(this),
+      objectActivated: this._onObjectActivated.bind(this),
+      objectMoved: this._onObjectMoved.bind(this),
+      objectScaled: this._onObjectScaled.bind(this),
+      objectRotated: this._onObjectRotated.bind(this),
+      objectAdded: this._onObjectAdded.bind(this),
+      objectModified: this._onObjectModified.bind(this),
       createdPath: this._onCreatedPath,
-      addText: bind_default()(_context9 = this._onAddText).call(_context9, this),
-      addObject: bind_default()(_context10 = this._onAddObject).call(_context10, this),
-      textEditing: bind_default()(_context11 = this._onTextEditing).call(_context11, this),
-      textChanged: bind_default()(_context12 = this._onTextChanged).call(_context12, this),
-      iconCreateResize: bind_default()(_context13 = this._onIconCreateResize).call(_context13, this),
-      iconCreateEnd: bind_default()(_context14 = this._onIconCreateEnd).call(_context14, this),
-      selectionCleared: bind_default()(_context15 = this._selectionCleared).call(_context15, this),
-      selectionCreated: bind_default()(_context16 = this._selectionCreated).call(_context16, this)
+      addText: this._onAddText.bind(this),
+      addObject: this._onAddObject.bind(this),
+      textEditing: this._onTextEditing.bind(this),
+      textChanged: this._onTextChanged.bind(this),
+      iconCreateResize: this._onIconCreateResize.bind(this),
+      iconCreateEnd: this._onIconCreateEnd.bind(this),
+      selectionCleared: this._selectionCleared.bind(this),
+      selectionCreated: this._selectionCreated.bind(this)
     };
 
     this._attachInvokerEvents();
@@ -60041,9 +59432,7 @@ var ImageEditor = /*#__PURE__*/function () {
   }, {
     key: "_attachInvokerEvents",
     value: function _attachInvokerEvents() {
-      var _context17,
-          _context18,
-          _this2 = this;
+      var _this2 = this;
 
       var UNDO_STACK_CHANGED = eventNames.UNDO_STACK_CHANGED,
           REDO_STACK_CHANGED = eventNames.REDO_STACK_CHANGED,
@@ -60062,7 +59451,7 @@ var ImageEditor = /*#__PURE__*/function () {
        * });
        */
 
-      this._invoker.on(UNDO_STACK_CHANGED, bind_default()(_context17 = this.fire).call(_context17, this, UNDO_STACK_CHANGED));
+      this._invoker.on(UNDO_STACK_CHANGED, this.fire.bind(this, UNDO_STACK_CHANGED));
       /**
        * Redo stack changed event
        * @event ImageEditor#redoStackChanged
@@ -60074,7 +59463,7 @@ var ImageEditor = /*#__PURE__*/function () {
        */
 
 
-      this._invoker.on(REDO_STACK_CHANGED, bind_default()(_context18 = this.fire).call(_context18, this, REDO_STACK_CHANGED));
+      this._invoker.on(REDO_STACK_CHANGED, this.fire.bind(this, REDO_STACK_CHANGED));
 
       if (this.ui) {
         var canvas = this._graphics.getCanvas();
@@ -60439,16 +59828,16 @@ var ImageEditor = /*#__PURE__*/function () {
   }, {
     key: "execute",
     value: function execute(commandName) {
-      var _context19, _this$_invoker, _context20;
+      var _context, _this$_invoker, _context2;
 
       for (var _len = arguments.length, args = new Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
         args[_key - 1] = arguments[_key];
       }
 
       // Inject an Graphics instance as first parameter
-      var theArgs = concat_default()(_context19 = [this._graphics]).call(_context19, args);
+      var theArgs = concat_default()(_context = [this._graphics]).call(_context, args);
 
-      return (_this$_invoker = this._invoker).execute.apply(_this$_invoker, concat_default()(_context20 = [commandName]).call(_context20, _toConsumableArray(theArgs)));
+      return (_this$_invoker = this._invoker).execute.apply(_this$_invoker, concat_default()(_context2 = [commandName]).call(_context2, _toConsumableArray(theArgs)));
     }
     /**
      * Invoke command
@@ -60461,16 +59850,16 @@ var ImageEditor = /*#__PURE__*/function () {
   }, {
     key: "executeSilent",
     value: function executeSilent(commandName) {
-      var _context21, _this$_invoker2, _context22;
+      var _context3, _this$_invoker2, _context4;
 
       for (var _len2 = arguments.length, args = new Array(_len2 > 1 ? _len2 - 1 : 0), _key2 = 1; _key2 < _len2; _key2++) {
         args[_key2 - 1] = arguments[_key2];
       }
 
       // Inject an Graphics instance as first parameter
-      var theArgs = concat_default()(_context21 = [this._graphics]).call(_context21, args);
+      var theArgs = concat_default()(_context3 = [this._graphics]).call(_context3, args);
 
-      return (_this$_invoker2 = this._invoker).executeSilent.apply(_this$_invoker2, concat_default()(_context22 = [commandName]).call(_context22, _toConsumableArray(theArgs)));
+      return (_this$_invoker2 = this._invoker).executeSilent.apply(_this$_invoker2, concat_default()(_context4 = [commandName]).call(_context4, _toConsumableArray(theArgs)));
     }
     /**
      * Undo
@@ -62412,7 +61801,6 @@ factory_command.register(flip_command);
 
 
 
-
 var IMAGE_LOADER = componentNames.IMAGE_LOADER;
 var loadImage_command = {
   name: commandNames.LOAD_IMAGE,
@@ -62436,10 +61824,9 @@ var loadImage_command = {
       return objectItem.type !== 'cropzone';
     });
 
-    for_each_default()(objects).call(objects, function (objectItem) {
+    objects.forEach(function (objectItem) {
       objectItem.evented = true;
     });
-
     this.undoData = {
       name: loader.getImageName(),
       image: prevImage,
@@ -62750,12 +62137,11 @@ factory_command.register(setObjectPosition_command);
 
 
 
-
 var changeSelection_command = {
   name: commandNames.CHANGE_SELECTION,
   execute: function execute(graphics, props) {
     if (this.isRedo) {
-      for_each_default()(props).call(props, function (prop) {
+      props.forEach(function (prop) {
         graphics.setObjectProperties(prop.id, prop);
       });
     } else {
@@ -62765,12 +62151,9 @@ var changeSelection_command = {
     return promise_default().resolve();
   },
   undo: function undo(graphics) {
-    var _context;
-
-    for_each_default()(_context = this.undoData).call(_context, function (datum) {
+    this.undoData.forEach(function (datum) {
       graphics.setObjectProperties(datum.id, datum);
     });
-
     return promise_default().resolve();
   }
 };
