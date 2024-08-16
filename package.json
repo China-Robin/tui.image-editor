@@ -1,6 +1,17 @@
 {
-  "name": "root",
-  "private": true,
+  "name": "tui-image-editor",
+  "version": "3.16.0",
+  "description": "TOAST UI ImageEditor",
+  "keywords": [
+    "nhn",
+    "nhn cloud",
+    "tui",
+    "component",
+    "image",
+    "editor",
+    "canvas",
+    "fabric"
+  ],
   "devDependencies": {
     "@babel/core": "^7.15.0",
     "@babel/eslint-parser": "^7.15.0",
@@ -53,5 +64,11 @@
   },
   "workspaces": [
     "apps/*"
+  ],
+  "main": "dist/tui-image-editor.js",
+  "files": [
+    "apps/image-editor/src",
+    "apps/image-editor/dist",
+    "apps/image-editor/index.d.ts"
   ]
 }
