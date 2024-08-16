@@ -3,6 +3,7 @@
  */
 function generateDynamicHtml(locale, menuParams) {
   if (
+    menuParams &&
     menuParams.watermark &&
     menuParams.watermark.defaultWatermark &&
     menuParams.watermark.defaultWatermark.length > 0
@@ -49,19 +50,37 @@ export default ({ locale, makeSvgIcon, menuParams }) => `
           </div>
           <table class="watermark-location-table" border="1">
             <tr>
-              <td class="watermark-location" data-origin-x="left" data-origin-y="top">左上</td>
-              <td class="watermark-location" data-origin-x="center" data-origin-y="top">上</td>
-              <td class="watermark-location" data-origin-x="right" data-origin-y="top">右上</td>
+              <td class="watermark-location" data-origin-x="left" data-origin-y="top">
+                ${locale.localize('Left top')}
+              </td>
+              <td class="watermark-location" data-origin-x="center" data-origin-y="top">
+                ${locale.localize('Center top')}
+              </td>
+              <td class="watermark-location" data-origin-x="right" data-origin-y="top">
+                ${locale.localize('Right top')}
+              </td>
             </tr>
             <tr>
-              <td class="watermark-location" data-origin-x="left" data-origin-y="center">左中</td>
-              <td class="watermark-location" data-origin-x="center" data-origin-y="center">中</td>
-              <td class="watermark-location" data-origin-x="right" data-origin-y="center">右中</td>
+              <td class="watermark-location" data-origin-x="left" data-origin-y="center">
+                ${locale.localize('Left center')}
+              </td>
+              <td class="watermark-location" data-origin-x="center" data-origin-y="center">
+                ${locale.localize('Center')}
+              </td>
+              <td class="watermark-location" data-origin-x="right" data-origin-y="center">
+                ${locale.localize('Right center')}
+              </td>
             </tr>
             <tr>
-              <td class="watermark-location" data-origin-x="left" data-origin-y="bottom">左下</td>
-              <td class="watermark-location" data-origin-x="center" data-origin-y="bottom">下</td>
-              <td class="watermark-location watermark-location-active" data-origin-x="right" data-origin-y="bottom">右下</td>
+              <td class="watermark-location" data-origin-x="left" data-origin-y="bottom">
+                ${locale.localize('Left bottom')}
+              </td>
+              <td class="watermark-location" data-origin-x="center" data-origin-y="bottom">
+                ${locale.localize('Center bottom')}
+              </td>
+              <td class="watermark-location watermark-location-active" data-origin-x="right" data-origin-y="bottom">
+                ${locale.localize('Right bottom')}
+              </td>
             </tr>
           </table>
         </li>
