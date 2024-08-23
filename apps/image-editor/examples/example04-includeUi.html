@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>4. Design</title>
+    <link
+      type="text/css"
+      href="https://uicdn.toast.com/tui-color-picker/v2.2.6/tui-color-picker.css"
+      rel="stylesheet"
+    />
+    <link type="text/css" href="../dist/tui-image-editor.css" rel="stylesheet" />
+    <style>
+      @import url(http://fonts.googleapis.com/css?family=Noto+Sans);
+      html,
+      body {
+        height: 100%;
+        margin: 0;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="tui-image-editor-container"></div>
+    <script
+      type="text/javascript"
+      src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/4.4.0/fabric.js"
+    ></script>
+    <script
+      type="text/javascript"
+      src="https://uicdn.toast.com/tui.code-snippet/v1.5.0/tui-code-snippet.min.js"
+    ></script>
+    <script
+      type="text/javascript"
+      src="https://uicdn.toast.com/tui-color-picker/v2.2.6/tui-color-picker.js"
+    ></script>
+    <script
+      type="text/javascript"
+      src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/1.3.3/FileSaver.min.js"
+    ></script>
+    <script type="text/javascript" src="../dist/tui-image-editor.js"></script>
+    <script type="text/javascript" src="js/theme/white-theme.js"></script>
+    <script type="text/javascript" src="js/theme/black-theme.js"></script>
+    <script>
+      // Image editor
+      var imageEditor = new tui.ImageEditor('#tui-image-editor-container', {
+        includeUI: {
+          loadImage: {
+            path: 'img/sampleImage2.png',
+            name: 'SampleImage',
+          },
+          locale: {
+            Crop: "裁剪",
+            ZoomIn: "放大",
+            ZoomOut: "缩小",
+            Hand: "拖拽",
+            History: "历史记录",
+            DeleteAll: "全部删除",
+            Delete: "删除",
+            Undo: "撤销",
+            Redo: "反撤销",
+            Reset: "重置",
+            Flip: "镜像",
+            Rotate: "旋转",
+            Draw: "画",
+            Shape: "形状标注",
+            Icon: "图标标注",
+            Text: "文字标注",
+            Mask: "遮罩",
+            Filter: "滤镜",
+            Bold: "加粗",
+            Italic: "斜体",
+            Underline: "下划线",
+            Left: "左对齐",
+            Center: "居中",
+            Right: "右对齐",
+            Color: "颜色",
+            "Text size": "字体大小",
+            Custom: "自定义",
+            Square: "正方形",
+            Apply: "应用",
+            Cancel: "取消",
+            "Flip X": "X 轴",
+            "Flip Y": "Y 轴",
+            Range: "区间",
+            Stroke: "描边",
+            Fill: "填充",
+            Circle: "圆",
+            Triangle: "三角",
+            Rectangle: "矩形",
+            Free: "曲线",
+            Straight: "直线",
+            Arrow: "箭头",
+            "Arrow-2": "箭头2",
+            "Arrow-3": "箭头3",
+            "Star-1": "星星1",
+            "Star-2": "星星2",
+            Polygon: "多边形",
+            Location: "定位",
+            Heart: "心形",
+            Bubble: "气泡",
+            "Custom icon": "自定义图标",
+            "Load Mask Image": "加载蒙层图片",
+            Grayscale: "灰度",
+            Blur: "模糊",
+            Sharpen: "锐化",
+            Emboss: "浮雕",
+            "Remove White": "除去白色",
+            Distance: "距离",
+            Brightness: "亮度",
+            Noise: "噪音",
+            "Color Filter": "彩色滤镜",
+            Sepia: "棕色",
+            Sepia2: "棕色2",
+            Invert: "负片",
+            Pixelate: "像素化",
+            Threshold: "阈值",
+            Tint: "色调",
+            Multiply: "正片叠底",
+            Blend: "混合色",
+            // etc...
+            // 水印
+            Watermark: "水印标注",
+            "Default watermark": "默认水印",
+            "Default location": "默认定位",
+            "Left top": "左上",
+            "Center top": "中上",
+            "Right top": "右上",
+            "Left center": "左中",
+            "Center center": "中心",
+            "Right center": "右中",
+            "Left bottom": "左下",
+            "Center bottom": "中下",
+            "Right bottom": "右下",
+            "Watermark opacity": "水印透明度",
+            "Add watermark": "选择水印",
+            // 图片
+            Image: "图片标注",
+            "Load Image": "选择图片"
+          },
+          theme: {
+            // image 左上角度图片
+            "common.bi.image": "", // 在这里换上你喜欢的logo图片
+            "common.bisize.width": "0px",
+            "common.bisize.height": "0px",
+            "common.backgroundImage": "none",
+            "common.backgroundColor": "#f3f4f6",
+            "common.border": "1px solid #444",
+            
+            // header
+            "header.backgroundImage": "none",
+            "header.backgroundColor": "#f3f4f6",
+            "header.border": "0px",
+            "header.display": "none",
+            
+            // load button
+            "loadButton.backgroundColor": "#fff",
+            "loadButton.border": "1px solid #ddd",
+            "loadButton.color": "#222",
+            "loadButton.fontFamily": "NotoSans, sans-serif",
+            "loadButton.fontSize": "12px",
+            "loadButton.display": "none", // 可以直接隐藏掉
+            
+            // download button
+            "downloadButton.backgroundColor": "#fdba3b",
+            "downloadButton.border": "1px solid #fdba3b",
+            "downloadButton.color": "#fff",
+            "downloadButton.fontFamily": "NotoSans, sans-serif",
+            "downloadButton.fontSize": "12px",
+            "downloadButton.display": "none", // 可以直接隐藏掉
+            
+            // icons default
+            "menu.normalIcon.color": "#8a8a8a",
+            "menu.activeIcon.color": "#555555",
+            "menu.disabledIcon.color": "#434343",
+            "menu.hoverIcon.color": "#e9e9e9",
+            "submenu.normalIcon.color": "#8a8a8a",
+            "submenu.activeIcon.color": "#e9e9e9",
+            
+            "menu.iconSize.width": "24px",
+            "menu.iconSize.height": "24px",
+            "submenu.iconSize.width": "32px",
+            "submenu.iconSize.height": "32px",
+            
+            // submenu primary color
+            "submenu.backgroundColor": "#1e1e1e",
+            "submenu.partition.color": "#858585",
+            
+            // submenu labels
+            "submenu.normalLabel.color": "#858585",
+            "submenu.normalLabel.fontWeight": "lighter",
+            "submenu.activeLabel.color": "#fff",
+            "submenu.activeLabel.fontWeight": "lighter",
+            
+            // checkbox style
+            "checkbox.border": "1px solid #ccc",
+            "checkbox.backgroundColor": "#fff",
+            
+            // rango style
+            "range.pointer.color": "#fff",
+            "range.bar.color": "#666",
+            "range.subbar.color": "#d1d1d1",
+            
+            "range.disabledPointer.color": "#414141",
+            "range.disabledBar.color": "#282828",
+            "range.disabledSubbar.color": "#414141",
+            
+            "range.value.color": "#fff",
+            "range.value.fontWeight": "lighter",
+            "range.value.fontSize": "11px",
+            "range.value.border": "1px solid #353535",
+            "range.value.backgroundColor": "#151515",
+            "range.title.color": "#fff",
+            "range.title.fontWeight": "lighter",
+            
+            // colorpicker style
+            "colorpicker.button.border": "1px solid #1e1e1e",
+            "colorpicker.title.color": "#fff"
+          }, // or whiteTheme
+          initMenu: 'watermark',
+          menuBarPosition: 'bottom',
+          // 菜单参数
+          menuParams: {
+            // 定义默认水印
+            watermark: {
+              defaultWatermark: [
+                'https://appnews.hkrbapp.net/favicon.ico',
+                'https://appnews.hkrbapp.net/favicon.ico',
+                'https://appnews.hkrbapp.net/favicon.ico',
+              ]
+            }
+          },
+        },
+        cssMaxWidth: 700,
+        cssMaxHeight: 500,
+        usageStatistics: false,
+      });
+      window.onresize = function () {
+        imageEditor.ui.resizeEditor();
+      };
+      document.getElementsByClassName("tui-image-editor-main")[0].style.top = 0;
+      // 隐藏删除按钮
+      document.getElementsByClassName("tie-btn-delete tui-image-editor-item help")[0].style.display = "none";
+      let controls = document.getElementsByClassName("tui-image-editor-controls")[0];
+      controls.style.display = 'flex';
+      controls.style.overflowX = 'auto';
+      controls.style.alignItems = 'center';
+      controls.style.height = '50px';
+    </script>
+  </body>
+</html>

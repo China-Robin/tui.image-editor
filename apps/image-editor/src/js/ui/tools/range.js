@@ -302,6 +302,7 @@ class Range {
    */
   _addDragEvent() {
     this.pointer.addEventListener('mousedown', this.eventHandler.startChangingSlide);
+    this.pointer.addEventListener('touchstart', this.eventHandler.startChangingSlide);
   }
 
   /**
@@ -310,6 +311,7 @@ class Range {
    */
   _removeDragEvent() {
     this.pointer.removeEventListener('mousedown', this.eventHandler.startChangingSlide);
+    this.pointer.removeEventListener('touchstart', this.eventHandler.startChangingSlide);
   }
 
   /**
@@ -318,7 +320,7 @@ class Range {
    * @private
    */
   _changeSlide(event) {
-    const changePosition = event.screenX;
+    const changePosition = event.screenX || event.touches[0].screenX;
     const diffPosition = changePosition - this.firstPosition;
     let touchPx = this.firstLeft + diffPosition;
     touchPx = touchPx > this.rangeWidth ? this.rangeWidth : touchPx;
@@ -345,7 +347,8 @@ class Range {
     if (event.target.className !== 'tui-image-editor-range') {
       return;
     }
-    const touchPx = event.offsetX;
+    const touchPx =
+      event.offsetX || event.touches[0].pageX - event.target.getBoundingClientRect().left;
     const ratio = touchPx / this.rangeWidth;
     const value = this._absMax * ratio + this._min;
     this.pointer.style.left = `${ratio * this.rangeWidth}px`;
@@ -356,11 +359,13 @@ class Range {
   }
 
   _startChangingSlide(event) {
-    this.firstPosition = event.screenX;
+    this.firstPosition = event.screenX || event.touches[0].screenX;
     this.firstLeft = toInteger(this.pointer.style.left) || 0;
 
     document.addEventListener('mousemove', this.eventHandler.changeSlide);
+    document.addEventListener('touchmove', this.eventHandler.changeSlide);
     document.addEventListener('mouseup', this.eventHandler.stopChangingSlide);
+    document.addEventListener('touchend', this.eventHandler.stopChangingSlide);
   }
 
   /**
@@ -371,7 +376,9 @@ class Range {
     this.fire('change', this._value, true);
 
     document.removeEventListener('mousemove', this.eventHandler.changeSlide);
+    document.removeEventListener('touchmove', this.eventHandler.changeSlide);
     document.removeEventListener('mouseup', this.eventHandler.stopChangingSlide);
+    document.removeEventListener('touchend', this.eventHandler.stopChangingSlide);
   }
 
   /**
