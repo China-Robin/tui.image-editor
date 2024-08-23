@@ -359,6 +359,7 @@ class Range {
   }
 
   _startChangingSlide(event) {
+    event.preventDefault();
     this.firstPosition = event.screenX || event.touches[0].screenX;
     this.firstLeft = toInteger(this.pointer.style.left) || 0;
 

@@ -246,5 +246,111 @@
       controls.style.alignItems = 'center';
       controls.style.height = '50px';
     </script>
+    <style>
+      .image-editor-dialog {
+        margin-top: 2vh;
+      }
+      .tui-image-editor-main {
+        top: 0;
+      }
+      .tui-image-editor-container .tui-image-editor-help-menu.top {
+        width: 100%;
+        left: auto;
+        transform: none;
+        top: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .tui-image-editor-container .tui-image-editor-help-menu.top li {
+        margin: 0;
+        padding: 0px 6px 0px 6px;
+      }
+      .tui-image-editor-container.bottom .tui-image-editor-submenu > div {
+        padding-bottom: 0;
+      }
+      .tie-btn-delete.tui-image-editor-item.help,
+      .tui-image-editor-container .tui-image-editor-menu > .tui-image-editor-item[tooltip-content]:hover:after,
+      .tui-image-editor-container .tui-image-editor-menu > .tui-image-editor-item[tooltip-content]:hover:before,
+      .tui-image-editor-container .tui-image-editor-help-menu.top > .tui-image-editor-item[tooltip-content]:after,
+      .tui-image-editor-container .tui-image-editor-help-menu.top > .tui-image-editor-item[tooltip-content]:before,
+      .tui-image-editor-container .tui-image-editor-submenu .tui-image-editor-submenu-style {
+        display: none;
+      }
+      .tui-image-editor-menu-crop,
+      .tui-image-editor-menu-flip,
+      .tui-image-editor-menu-rotate,
+      .tui-image-editor-menu-draw,
+      .tui-image-editor-menu-shape,
+      .tui-image-editor-menu-icon,
+      .tui-image-editor-menu-text,
+      .tui-image-editor-menu-image,
+      .tui-image-editor-menu-watermark,
+      .tui-image-editor-menu-filter {
+        margin: 0 auto !important;
+      }
+      
+      .tui-image-editor-container .tui-image-editor-menu > .tui-image-editor-item {
+        padding: 4px 4px 1px 4px;
+      }
+      .tui-image-editor-container .tui-image-editor-controls {
+        display: flex;
+        overflow-x: auto;
+        align-items: center;
+        padding: 0 8px;
+        height: 50px;
+      }
+      .tui-image-editor-container .tui-image-editor-main.tui-image-editor-menu-crop .tui-image-editor-submenu,
+      .tui-image-editor-container .tui-image-editor-main.tui-image-editor-menu-flip .tui-image-editor-submenu,
+      .tui-image-editor-container .tui-image-editor-main.tui-image-editor-menu-rotate .tui-image-editor-submenu,
+      .tui-image-editor-container .tui-image-editor-main.tui-image-editor-menu-draw .tui-image-editor-submenu,
+      .tui-image-editor-container .tui-image-editor-main.tui-image-editor-menu-shape .tui-image-editor-submenu,
+      .tui-image-editor-container .tui-image-editor-main.tui-image-editor-menu-icon .tui-image-editor-submenu,
+      .tui-image-editor-container .tui-image-editor-main.tui-image-editor-menu-text .tui-image-editor-submenu,
+      .tui-image-editor-container .tui-image-editor-main.tui-image-editor-menu-image .tui-image-editor-submenu,
+      .tui-image-editor-container .tui-image-editor-main.tui-image-editor-menu-watermark .tui-image-editor-submenu,
+      .tui-image-editor-container .tui-image-editor-main.tui-image-editor-menu-filter .tui-image-editor-submenu {
+        display: flex;
+      }
+      .tui-image-editor-container .tui-image-editor-main {
+        top: 30px;
+      }
+      .tui-image-editor-container .tui-image-editor-main-container {
+        bottom: 50px;
+      }
+      .tui-image-editor-container .tui-image-editor-submenu {
+        overflow-x: auto !important;
+        align-items: center !important;
+        width: 100%;
+        background-color: #1e1e1e;
+        padding: 0 8px;
+      }
+      .tui-image-editor-menu-watermark .tui-image-editor-submenu-item {
+        display: inline-flex;
+      }
+      .watermark-location-table td {
+        height: 30px;
+        font-size: 12px;
+      }
+      .tui-image-editor-menu-watermark .tui-image-editor-submenu-align {
+        width: 180px !important;
+        margin: 0 8px !important;
+      }
+      .tui-image-editor-menu-watermark .tui-image-editor-submenu-item li:nth-child(5) {
+        width: auto !important;
+      }
+      .tui-image-editor-menu-watermark .tui-image-editor-submenu-item li:nth-child(7) {
+        margin: auto 0 !important;
+      }
+      .tui-image-editor-menu-watermark .watermark-opacity-box {
+        display: inline-block;
+      }
+      .tui-image-editor-menu-watermark .watermark-opacity-range {
+        margin-right: 8px;
+      }
+      .watermark-default-img {
+        max-height: 50px;
+      }
+    </style>
   </body>
 </html>

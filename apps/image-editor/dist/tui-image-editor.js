@@ -1,6 +1,6 @@
 /*!
  * TOAST UI ImageEditor
- * @version 3.16.0
+ * @version 3.16.2
  * @license MIT
  */
 (function webpackUniversalModuleDefinition(root, factory) {
@@ -43455,6 +43455,7 @@ var Range = /*#__PURE__*/function () {
   }, {
     key: "_startChangingSlide",
     value: function _startChangingSlide(event) {
+      event.preventDefault();
       this.firstPosition = event.screenX || event.touches[0].screenX;
       this.firstLeft = toInteger(this.pointer.style.left) || 0;
       document.addEventListener('mousemove', this.eventHandler.changeSlide);
